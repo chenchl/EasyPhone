@@ -3,6 +3,7 @@ package cn.chenchl.easyphone.weather.ui
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.widget.FrameLayout
 import cn.chenchl.easyphone.BR
@@ -48,8 +49,10 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
             Manifest.permission.READ_PHONE_STATE
         ) {
             LocationManager.getCurrentLocationCity({ city, _, _ ->
-                viewModel.cityName = city
-                viewModel.requestWeather()
+                if (!TextUtils.equals(viewModel.cityName, city)) {
+                    viewModel.cityName = city
+                    viewModel.requestWeather()
+                }
             }, {
                 runUiThread {
                     Utils.getApp().toast(it)
