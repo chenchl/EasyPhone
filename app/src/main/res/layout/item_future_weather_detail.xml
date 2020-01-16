@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="future"
+            type="cn.chenchl.easyphone.weather.data.bean.CityWeather.Future" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/x40"
+        tools:background="@color/light_gray">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@{future.date}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"
+            tools:text="2020-01-15" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@{future.weather}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"
+            tools:text="小雨转多云" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@{future.temperature}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"
+            tools:text="4/8℃" />
+
+    </LinearLayout>
+</layout>

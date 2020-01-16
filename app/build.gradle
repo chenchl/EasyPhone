@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+android {
+    signingConfigs {
+        release {
+            storeFile file('E:\\demo\\EasyPhone\\key0.jks')
+            storePassword '891107'
+            keyAlias = 'key0'
+            keyPassword '891107'
+        }
+    }
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "cn.chenchl.easyphone"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kapt {
+        generateStubs = true
+    }
+}
+
+dependencies {
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.zaaach:citypicker:2.0.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation project(path: ':libs')
+    kapt  "com.android.databinding:compiler:3.5.3"
+}
+
+/*// build.gradle
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile)
+        .all {
+            kotlinOptions {
+                freeCompilerArgs += [
+                        '-Xno-call-assertions',
+                        '-Xno-receiver-assertions',
+                        '-Xno-param-assertions'
+                ]
+            }
+        }*/

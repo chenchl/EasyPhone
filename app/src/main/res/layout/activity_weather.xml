@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cn.chenchl.easyphone.weather.WeatherViewModel" />
+
+        <import type="android.text.TextUtils" />
+
+        <import
+            alias="teV"
+            type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="cn.chenchl.easyphone.weather.WeatherViewModel" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/cl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        tools:context=".ui.WeatherActivity">
+
+        <ImageView
+            android:id="@+id/iv_bg"
+            loadPicasso="@{vm.bgUrl}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/bg_weather_default" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefreshlayout"
+            colorSchemeResources="@{vm.srlColor}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            bind:onRefreshListener="@{()->vm.onRefresh()}"
+            bind:refreshing="@{vm.refreshing}">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{()->vm.onChangeCity()}"
+                        android:padding="@dimen/x30"
+                        android:text="@string/change_city"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x36"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_city"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:paddingTop="@dimen/x20"
+                        android:paddingBottom="@dimen/x20"
+                        android:text="@{vm.weatherData.city,default=绵阳}"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x64"
+                        android:textStyle="bold" />
+
+                    <include
+                        layout="@layout/item_today_weather"
+                        bind:weather="@{vm.weatherData.realtime}" />
+
+                    <include
+                        layout="@layout/item_air_quality"
+                        bind:weather="@{vm.weatherData.realtime}" />
+
+                    <include
+                        layout="@layout/item_future_weather"
+                        bind:future="@{vm.weatherData}" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_story"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/x20"
+                        android:background="@color/light_gray" />
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <View
+            android:id="@+id/statusbar_top"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/statusbar_gradient" />
+
+    </FrameLayout>
+</layout>

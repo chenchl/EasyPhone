@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EasyPhone</string>
+    <string name="temperature_format">%s℃</string>
+    <string name="direct">\ —\ \</string>
+    <string name="air_quality">空气质量\n%s</string>
+    <string name="air_humidity">湿度\n%s</string>
+    <string name="change_city">切换城市</string>
+</resources>

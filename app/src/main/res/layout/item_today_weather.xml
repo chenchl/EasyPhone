@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="weather"
+            type="cn.chenchl.easyphone.weather.data.bean.CityWeather.Realtime" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/x20"
+        android:background="@color/light_gray"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/x20"
+            android:gravity="center"
+            android:text="@{@string/temperature_format(weather.temperature)}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x60"
+            android:textStyle="bold"
+            tools:text="17℃" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@{weather.info}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x54"
+            android:textStyle="bold"
+            tools:text="阴" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/x20"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@{weather.direct+@string/direct+weather.power}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"
+            tools:text="北风 -- 2级" />
+
+
+    </LinearLayout>
+</layout>
