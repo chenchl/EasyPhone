@@ -74,7 +74,10 @@ fun <T : FragmentActivity> T.permissionsDialog(
                 dialog.dismiss()
                 toAppSetting()
             }
-            .setNegativeButton("下次再说") { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton("下次再说") { dialog, _ ->
+                dialog.dismiss()
+                finish()
+            }
             .create()
             .show()
     }
@@ -137,7 +140,10 @@ fun <T : Fragment> T.permissionsDialog(
                 dialog.dismiss()
                 toAppSetting()
             }
-            .setNegativeButton("下次再说") { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton("下次再说") { dialog, _ ->
+                dialog.dismiss()
+                this.activity?.finish()
+            }
             .create()
             .show()
     }
