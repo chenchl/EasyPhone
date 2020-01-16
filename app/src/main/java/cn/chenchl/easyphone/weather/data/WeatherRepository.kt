@@ -5,8 +5,10 @@ import android.text.TextUtils
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import cn.chenchl.easyphone.weather.data.bean.CityWeather
+import cn.chenchl.easyphone.weather.data.bean.Joke
 import cn.chenchl.easyphone.weather.data.dao.WeatherDao
 import cn.chenchl.easyphone.weather.data.model.CityWeatherModel
+import cn.chenchl.easyphone.weather.data.model.JokeListModel
 import cn.chenchl.easyphone.weather.data.net.WeatherNetwork
 import cn.chenchl.libs.Utils
 import cn.chenchl.libs.network.retrofit.DefaultResponseSubscriber
@@ -14,6 +16,8 @@ import cn.chenchl.libs.network.retrofit.NetError
 import cn.chenchl.libs.rxjava.RxJavaTransformers
 import cn.chenchl.libs.rxjava.RxLifecycleUtil
 import cn.chenchl.mvvm.repository.BaseRepository
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.jetbrains.anko.toast
 
 /**
@@ -68,6 +72,33 @@ class WeatherRepository(
             weatherData.value = fromJson(weatherJson, CityWeather::class.java)
         }
         return weatherData
+    }
+
+    @SuppressLint("CheckResult")
+    fun getJokeList(isRefresh: Boolean, lifecycle: Lifecycle): MutableLiveData<List<Joke>> {
+        val jokeList: MutableLiveData<List<Joke>> = MutableLiveData()
+        val jokeListJson = dao.queryJokeList()
+        if (TextUtils.isEmpty(jokeListJson) || isRefresh) {
+            network.getJokeList()
+                .compose(RxJavaTransformers.getDefaultScheduler())
+                .`as`(RxLifecycleUtil.bindLifeCycle(lifecycle, Lifecycle.Event.ON_DESTROY))
+                .subscribeWith(object : DefaultResponseSubscriber<JokeListModel, List<Joke>>() {
+                    override fun onSuccess(data: List<Joke>?) {
+                        dao.insertJokeList(toJson(data))
+                        jokeList.value = data
+                    }
+
+                    override fun onFail(error: NetError) {
+                        jokeList.value = null
+                        Utils.getApp().toast(error.message!!)
+                    }
+                })
+        } else {
+            val listType = object :
+                TypeToken<List<Joke>>() {}.type
+            jokeList.value = Gson().fromJson<List<Joke>>(jokeListJson, listType)
+        }
+        return jokeList
     }
 
     /**

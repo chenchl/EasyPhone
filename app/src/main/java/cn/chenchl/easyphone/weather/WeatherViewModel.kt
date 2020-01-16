@@ -8,6 +8,7 @@ import cn.chenchl.easyphone.R
 import cn.chenchl.easyphone.utils.location.LocationManager
 import cn.chenchl.easyphone.weather.data.WeatherRepository
 import cn.chenchl.easyphone.weather.data.bean.CityWeather
+import cn.chenchl.easyphone.weather.data.bean.Joke
 import cn.chenchl.easyphone.weather.data.dao.WeatherDao
 import cn.chenchl.easyphone.weather.data.net.WeatherNetwork
 import cn.chenchl.libs.Utils
@@ -38,6 +39,8 @@ class WeatherViewModel : BaseViewModel() {
 
     val weatherData: MutableLiveData<CityWeather> = MutableLiveData()
 
+    val jokeData: MutableLiveData<List<Joke>> = MutableLiveData()
+
     val refreshing: MutableLiveData<Boolean> = MutableLiveData()
 
     var cityName: String = LocalCache["currentCity", "绵阳"]!!
@@ -49,6 +52,14 @@ class WeatherViewModel : BaseViewModel() {
                 Observer {
                     weatherData.value = it
                     refreshing.value = false
+                })
+    }
+
+    fun requestJokeList(isRefresh: Boolean = true) {
+        repository.getJokeList(isRefresh, getLifecycle()!!)
+            .observe(getLifecycleOwner().get()!!,
+                Observer {
+                    jokeData.value = it
                 })
     }
 
@@ -72,9 +83,11 @@ class WeatherViewModel : BaseViewModel() {
 
     fun onRefresh() {
         requestWeather()
+        requestJokeList()
     }
 
     var cityPicker: CityPicker? = null
+
     fun onChangeCity() {
         if (Utils.getTopActivityOrApp() is FragmentActivity) {
             val hotCities: MutableList<HotCity> = ArrayList()

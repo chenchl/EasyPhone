@@ -7,21 +7,26 @@ import cn.chenchl.mvvm.repository.BaseNet
  * created by ccl on 2020/1/14
  **/
 object WeatherNetwork : BaseNet() {
-    private const val MAIN_BASE_URL = "https://apis.juhe.cn/simpleWeather/"
+    private const val WEATHER_BASE_URL = "https://apis.juhe.cn/simpleWeather/"
 
     const val MAIN_BG_URL = "https://pic.tsmp4.net/api/fengjing/img.php"
 
-    const val APP_KEY = "12238789aa92a097fdf84ef15e10d1e4"
+    const val WEATHER_KEY = "12238789aa92a097fdf84ef15e10d1e4"
 
-    private val mainNetService by lazy {
+    const val JOKE_KEY = "3f27b3ee95c9e665ed6a3a37d7532db3"
+
+    private val WeatherNetService by lazy {
         RetrofitUtil.get(
-            MAIN_BASE_URL,
+            WEATHER_BASE_URL,
             WeatherNetService::class.java
         )
     }
 
-    fun getWeather(city: String) = mainNetService
+    fun getWeather(city: String) = WeatherNetService
         .getWeather(city)
+
+    fun getJokeList() = WeatherNetService
+        .getJokeList()
 
 
 }

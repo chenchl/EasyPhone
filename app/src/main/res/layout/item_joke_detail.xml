@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cn.chenchl.easyphone.utils.TimeUtils" />
+
+        <variable
+            name="utils"
+            type="TimeUtils" />
+
+        <variable
+            name="joke"
+            type="cn.chenchl.easyphone.weather.data.bean.Joke" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/x40"
+        tools:background="@color/light_gray">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="@{utils.getTimeByUnixTime(joke.unixtime)}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"
+            tools:text="2020-01-15" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x20"
+            android:gravity="left"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="@dimen/x12"
+            android:text="@{joke.content}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x34"
+            tools:text="…给闺女买了一双小皮鞋，花了两张毛爷爷，小鞋很结实，闺女穿了好多天后要我给她买鞋，说不喜欢了，我就各种教育，比如要穿破之后买，要知道省钱……等等。今天再回去的时候，姑娘左手拎着残破的鞋子，右手拿着剪刀，跑过来说:爸爸，现在可以买新的鞋子了吧！来，过来，爸爸保证不打你，我的亲闺女。" />
+
+    </LinearLayout>
+</layout>

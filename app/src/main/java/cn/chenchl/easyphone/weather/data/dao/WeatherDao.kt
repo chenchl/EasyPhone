@@ -30,6 +30,12 @@ object WeatherDao : BaseDao() {
         LocalCache[today] = weatherJson
     }
 
+    fun queryJokeList(): String? = LocalCache["jokeList", ""]
+
+    fun insertJokeList(jokeJson: String) {
+        LocalCache["jokeList"] = jokeJson
+    }
+
     private fun loadWeatherKindFromAsset(): ArrayList<WeatherKind> {
         return try {
             val stringFromAssetFile = FileUtils.getStringFromAssetFile("weather_kind")

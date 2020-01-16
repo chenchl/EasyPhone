@@ -85,6 +85,10 @@
                         layout="@layout/item_future_weather"
                         bind:future="@{vm.weatherData}" />
 
+                    <include
+                        layout="@layout/item_jokelist"
+                        bind:joke="@{vm.jokeData}" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_story"
                         android:layout_width="match_parent"

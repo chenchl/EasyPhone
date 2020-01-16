@@ -63,6 +63,7 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
 
     override fun initData(savedInstanceState: Bundle?) {
         viewModel.requestWeather(isRefresh = false)
+        viewModel.requestJokeList(isRefresh = false)
     }
 
 }
