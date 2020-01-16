@@ -120,10 +120,8 @@ class WeatherViewModel : BaseViewModel() {
                                 })
                             }
                         })
-                cityPicker?.show()
-            } else {
-                cityPicker!!.show()
             }
+            cityPicker?.show()
 
         }
     }
