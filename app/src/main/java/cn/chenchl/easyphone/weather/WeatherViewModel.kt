@@ -58,6 +58,11 @@ class WeatherViewModel : BaseViewModel() {
         refreshBgOnTimer()
     }
 
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+        cityPicker = null
+    }
+
     private fun refreshBgOnTimer() {
         Flowable.interval(5, 5, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
