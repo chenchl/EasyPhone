@@ -32,7 +32,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="4ce69d42279b3c182e8d55ddf6c6e320"/>//开发者申请的key
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="4ce69d42279b3c182e8d55ddf6c6e320"/>
 
         <activity
             android:name=".weather.ui.WeatherActivity"
