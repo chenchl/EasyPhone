@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProviders
+import cn.chenchl.libs.BaseApp
+import cn.chenchl.libs.Utils
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -16,6 +18,11 @@ abstract class BaseMVVMActivity<V : ViewDataBinding, VM : BaseViewModel> :
     val binding: V by lazy { DataBindingUtil.setContentView<V>(this, initXml()) }
 
     val viewModel: VM by lazy { initVM() }
+
+    //全局共享viewModel 可用于消息传递 变量共享
+    val globalShareViewModel: GlobalShareViewModel by lazy {
+        (Utils.getApp() as BaseApp).getViewModelProvider().get(GlobalShareViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -2,6 +2,9 @@ package cn.chenchl.libs
 
 import android.os.Build
 import android.os.Process
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.multidex.MultiDexApplication
 import cn.chenchl.libs.cache.CacheConfig
 import cn.chenchl.libs.cache.LocalCache
@@ -21,7 +24,17 @@ import org.jetbrains.anko.doBeforeSdk
 /**
  * created by ccl on 2020/1/7
  **/
-class BaseApp : MultiDexApplication() {
+class BaseApp : MultiDexApplication(), ViewModelStoreOwner {
+
+    //实现全局viewModel
+    private val mViewModelStore: ViewModelStore by lazy { ViewModelStore() }
+
+    //全局唯一AndroidViewModelFactory
+    private val mFactory: ViewModelProvider.Factory by lazy {
+        ViewModelProvider.AndroidViewModelFactory.getInstance(
+            this
+        )
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -80,4 +93,8 @@ class BaseApp : MultiDexApplication() {
             }
         }
     }
+
+    override fun getViewModelStore(): ViewModelStore = mViewModelStore
+
+    fun getViewModelProvider(): ViewModelProvider = ViewModelProvider(this, mFactory)
 }
