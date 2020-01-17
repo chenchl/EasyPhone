@@ -1,5 +1,6 @@
 package cn.chenchl.easyphone.weather.ui
 
+import android.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -42,6 +43,8 @@ class WeatherViewModel : BaseViewModel() {
     val jokeData: MutableLiveData<List<Joke>> = MutableLiveData()
 
     val refreshing: MutableLiveData<Boolean> = MutableLiveData()
+
+    val titleColor: MutableLiveData<Int> = MutableLiveData(Color.WHITE)
 
     var cityName: String = LocalCache["currentCity", "绵阳"]!!
 
