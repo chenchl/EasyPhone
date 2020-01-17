@@ -6,11 +6,12 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.FrameLayout
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import cn.chenchl.easyphone.BR
 import cn.chenchl.easyphone.R
 import cn.chenchl.easyphone.databinding.ActivityWeatherBinding
 import cn.chenchl.easyphone.utils.location.LocationManager
-import cn.chenchl.easyphone.weather.WeatherViewModel
 import cn.chenchl.libs.Utils
 import cn.chenchl.libs.extensions.checkPermissions
 import cn.chenchl.libs.extensions.getStatusBarHeight
@@ -21,6 +22,8 @@ import org.jetbrains.anko.doFromSdk
 import org.jetbrains.anko.toast
 
 class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewModel>() {
+
+    private val jokeListAdapter: JokeListAdapter = JokeListAdapter()
 
     override fun initXml(): Int = R.layout.activity_weather
 
@@ -59,11 +62,22 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
                 }
             })
         }
+        //jokeList
+        jokeListAdapter.setHasStableIds(true)
+        rv_story.layoutManager = LinearLayoutManager(this)
+        rv_story.adapter = jokeListAdapter
     }
 
     override fun initData(savedInstanceState: Bundle?) {
         viewModel.requestWeather(isRefresh = false)
         viewModel.requestJokeList(isRefresh = false)
+    }
+
+    override fun initViewObservable() {
+        viewModel.jokeData.observe(this, Observer {
+            jokeListAdapter.clear()
+            jokeListAdapter.addDataList(it)
+        })
     }
 
 }

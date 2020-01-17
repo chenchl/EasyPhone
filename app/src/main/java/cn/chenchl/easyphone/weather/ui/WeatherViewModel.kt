@@ -1,4 +1,4 @@
-package cn.chenchl.easyphone.weather
+package cn.chenchl.easyphone.weather.ui
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
