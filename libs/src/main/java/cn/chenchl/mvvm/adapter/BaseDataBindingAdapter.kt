@@ -21,10 +21,6 @@ abstract class BaseDataBindingAdapter<D, B : ViewDataBinding?> :
     private var longListener: OnItemLongClickListener<D>? = null
     val list: List<D> = mList
 
-    init {
-        setHasStableIds(true)
-    }
-
     fun addDataList(list: List<D>) {
         val start = mList.size
         mList.addAll(list)

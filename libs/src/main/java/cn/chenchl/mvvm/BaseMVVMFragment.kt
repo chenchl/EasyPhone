@@ -77,6 +77,7 @@ abstract class BaseMVVMFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragm
         lifecycle.addObserver(viewModel)
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun initVM(): VM {
         //获取超类（即BaseMVVMActivity）以及泛型参数类型
         val type = javaClass.genericSuperclass

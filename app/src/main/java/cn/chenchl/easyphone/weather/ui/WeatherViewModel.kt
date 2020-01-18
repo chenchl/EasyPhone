@@ -19,7 +19,6 @@ import cn.chenchl.mvvm.RepoMediatorLiveData
 import com.zaaach.citypicker.CityPicker
 import com.zaaach.citypicker.adapter.OnPickListener
 import com.zaaach.citypicker.model.City
-import com.zaaach.citypicker.model.HotCity
 import com.zaaach.citypicker.model.LocateState
 import com.zaaach.citypicker.model.LocatedCity
 import io.reactivex.Flowable
@@ -85,19 +84,12 @@ class WeatherViewModel : BaseViewModel() {
 
     fun onChangeCity() {
         if (Utils.getTopActivityOrApp() is FragmentActivity) {
-            val hotCities: MutableList<HotCity> = ArrayList()
-            hotCities.add(HotCity("北京", "北京", "101010100")) //code为城市代码
-            hotCities.add(HotCity("西宁", "青海", "101010232")) //code为城市代码
-            hotCities.add(HotCity("上海", "上海", "101020100"))
-            hotCities.add(HotCity("广州", "广东", "101280101"))
-            hotCities.add(HotCity("深圳", "广东", "101280601"))
-            hotCities.add(HotCity("杭州", "浙江", "101210101"))
             if (cityPicker == null) {
                 cityPicker =
                     CityPicker.from(Utils.getTopActivityOrApp() as FragmentActivity) //activity或者fragment
                         .enableAnimation(true)    //启用动画效果，默认无
                         //.setLocatedCity(LocatedCity("绵阳", "四川", "101212059"))  //APP自身已定位的城市，传null会自动定位（默认）
-                        .setHotCities(hotCities)    //指定热门城市
+                        //.setHotCities(hotCities)    //指定热门城市
                         .setOnPickListener(object : OnPickListener {
                             override fun onPick(position: Int, data: City?) {
                                 cityName = data?.name ?: "绵阳"
