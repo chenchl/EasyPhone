@@ -4,27 +4,12 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import cn.chenchl.libs.log.LogUtil
-import java.lang.ref.WeakReference
 
 /**
  * created by ccl on 2020/1/12
  **/
 open class BaseViewModel : ViewModel(),
     DefaultLifecycleObserver {
-
-    private var lifecycleOwner: WeakReference<LifecycleOwner>? = null
-
-    override fun onCleared() {
-        lifecycleOwner?.clear()
-    }
-
-    fun injectLifecycleOwner(lifecycleOwner: LifecycleOwner) {
-        this.lifecycleOwner = WeakReference(lifecycleOwner)
-    }
-
-    fun getLifecycleOwner() = this.lifecycleOwner!!
-
-    fun getLifecycle() = getLifecycleOwner().get()?.lifecycle
 
     override fun onCreate(owner: LifecycleOwner) {
         LogUtil.e("onCreate$owner")
@@ -49,7 +34,6 @@ open class BaseViewModel : ViewModel(),
 
     override fun onDestroy(owner: LifecycleOwner) {
         LogUtil.e("onDestroy$owner")
-        lifecycleOwner?.clear()
     }
 
 

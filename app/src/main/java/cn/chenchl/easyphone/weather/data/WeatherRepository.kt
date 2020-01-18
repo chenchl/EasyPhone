@@ -2,7 +2,6 @@ package cn.chenchl.easyphone.weather.data
 
 import android.annotation.SuppressLint
 import android.text.TextUtils
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import cn.chenchl.easyphone.weather.data.bean.CityWeather
 import cn.chenchl.easyphone.weather.data.bean.Joke
@@ -14,7 +13,6 @@ import cn.chenchl.libs.Utils
 import cn.chenchl.libs.network.retrofit.DefaultResponseSubscriber
 import cn.chenchl.libs.network.retrofit.NetError
 import cn.chenchl.libs.rxjava.RxJavaTransformers
-import cn.chenchl.libs.rxjava.RxLifecycleUtil
 import cn.chenchl.mvvm.repository.BaseRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -33,11 +31,11 @@ class WeatherRepository(
     val weatherData: MutableLiveData<CityWeather> = MutableLiveData()
 
     @SuppressLint("CheckResult")
-    fun getWeather(city: String, isRefresh: Boolean, lifecycle: Lifecycle) {
+    fun getWeather(city: String, isRefresh: Boolean) {
         val weatherJson = dao.queryTodayWeather()
         if (TextUtils.isEmpty(weatherJson) || isRefresh) {
-            //方案1 使用autoDispose自动管理
-            network.getWeather(city)
+            //方案1（不推荐） 使用autoDispose自动管理 需传递lifecycle对象过来 容易造成内存泄漏
+            /*network.getWeather(city)
                 .compose(RxJavaTransformers.getDefaultScheduler())
                 .`as`(RxLifecycleUtil.bindLifeCycle(lifecycle, Lifecycle.Event.ON_DESTROY))
                 .subscribeWith(object : DefaultResponseSubscriber<CityWeatherModel, CityWeather>() {
@@ -52,33 +50,35 @@ class WeatherRepository(
                         weatherData.value = null
                         Utils.getApp().toast(error.message!!)
                     }
-                })
-            //方案2 加入compositeDisposable中 在Repository触发onCleared时取消
-            /*addSubscriber(network.getWeather(city)
+                })*/
+            //方案2（推荐） 加入compositeDisposable中 在Repository触发onCleared时取消 或在viewModel中使用disposeAll方法在任意生命周期自主取消 较灵活
+            val dispose = network.getWeather(city)
                 .compose(RxJavaTransformers.getDefaultScheduler())
-                .`as`(RxLifecycleUtil.bindLifeCycle(lifecycleOwner, Lifecycle.Event.ON_DESTROY))
                 .subscribeWith(object : DefaultResponseSubscriber<CityWeatherModel, CityWeather>() {
                     override fun onSuccess(data: CityWeather?) {
-                        Utils.getApp().toast(data.toString())
+                        weatherDataConversion(data)
+                        dao.insertTodayWeather(toJson(data))
+                        dao.insertCurrentCity(data?.city)
+                        weatherData.value = data
                     }
 
                     override fun onFail(error: NetError) {
+                        weatherData.value = null
                         Utils.getApp().toast(error.message!!)
                     }
                 })
-            )*/
+            addSubscriber(dispose)
         } else {
             weatherData.value = fromJson(weatherJson, CityWeather::class.java)
         }
     }
 
     @SuppressLint("CheckResult")
-    fun getJokeList(isRefresh: Boolean, lifecycle: Lifecycle) {
+    fun getJokeList(isRefresh: Boolean) {
         val jokeListJson = dao.queryJokeList()
         if (TextUtils.isEmpty(jokeListJson) || isRefresh) {
-            network.getJokeList()
+            val dispose = network.getJokeList()
                 .compose(RxJavaTransformers.getDefaultScheduler())
-                .`as`(RxLifecycleUtil.bindLifeCycle(lifecycle, Lifecycle.Event.ON_DESTROY))
                 .subscribeWith(object : DefaultResponseSubscriber<JokeListModel, List<Joke>>() {
                     override fun onSuccess(data: List<Joke>?) {
                         dao.insertJokeList(toJson(data))
@@ -90,6 +90,7 @@ class WeatherRepository(
                         Utils.getApp().toast(error.message!!)
                     }
                 })
+            addSubscriber(dispose)
         } else {
             val listType = object :
                 TypeToken<List<Joke>>() {}.type

@@ -50,28 +50,29 @@ class WeatherViewModel : BaseViewModel() {
 
     fun requestWeather(city: String = cityName, isRefresh: Boolean = true) {
         refreshing.value = true
-        repository.getWeather(city, isRefresh, getLifecycle()!!)
+        repository.getWeather(city, isRefresh)
     }
 
     fun requestJokeList(isRefresh: Boolean = true) {
-        repository.getJokeList(isRefresh, getLifecycle()!!)
+        repository.getJokeList(isRefresh)
     }
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
         //启动背景定时刷新
-        refreshBgOnTimer()
+        refreshBgOnTimer(owner)
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
+        repository.disposeAll()
         cityPicker = null
     }
 
-    private fun refreshBgOnTimer() {
+    private fun refreshBgOnTimer(owner: LifecycleOwner) {
         Flowable.interval(5, 5, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
-            .`as`(RxLifecycleUtil.bindLifeCycle(getLifecycleOwner().get()))//绑定到onPause停止
+            .`as`(RxLifecycleUtil.bindLifeCycle(owner))//绑定到onPause停止
             .subscribe { bgUrl.value = bgUrl.value }
     }
 
