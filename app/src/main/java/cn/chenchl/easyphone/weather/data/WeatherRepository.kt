@@ -28,13 +28,12 @@ class WeatherRepository(
     net: WeatherNetwork
 ) : BaseRepository<WeatherDao, WeatherNetwork>(dao, net) {
 
+    val jokeList: MutableLiveData<List<Joke>> = MutableLiveData()
+
+    val weatherData: MutableLiveData<CityWeather> = MutableLiveData()
+
     @SuppressLint("CheckResult")
-    fun getWeather(
-        city: String,
-        isRefresh: Boolean,
-        lifecycle: Lifecycle
-    ): MutableLiveData<CityWeather> {
-        val weatherData: MutableLiveData<CityWeather> = MutableLiveData()
+    fun getWeather(city: String, isRefresh: Boolean, lifecycle: Lifecycle) {
         val weatherJson = dao.queryTodayWeather()
         if (TextUtils.isEmpty(weatherJson) || isRefresh) {
             //方案1 使用autoDispose自动管理
@@ -71,12 +70,10 @@ class WeatherRepository(
         } else {
             weatherData.value = fromJson(weatherJson, CityWeather::class.java)
         }
-        return weatherData
     }
 
     @SuppressLint("CheckResult")
-    fun getJokeList(isRefresh: Boolean, lifecycle: Lifecycle): MutableLiveData<List<Joke>> {
-        val jokeList: MutableLiveData<List<Joke>> = MutableLiveData()
+    fun getJokeList(isRefresh: Boolean, lifecycle: Lifecycle) {
         val jokeListJson = dao.queryJokeList()
         if (TextUtils.isEmpty(jokeListJson) || isRefresh) {
             network.getJokeList()
@@ -98,7 +95,6 @@ class WeatherRepository(
                 TypeToken<List<Joke>>() {}.type
             jokeList.value = Gson().fromJson<List<Joke>>(jokeListJson, listType)
         }
-        return jokeList
     }
 
     /**

@@ -4,7 +4,6 @@ import android.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import cn.chenchl.easyphone.R
 import cn.chenchl.easyphone.utils.location.LocationManager
 import cn.chenchl.easyphone.weather.data.WeatherRepository
@@ -16,6 +15,7 @@ import cn.chenchl.libs.Utils
 import cn.chenchl.libs.cache.LocalCache
 import cn.chenchl.libs.rxjava.RxLifecycleUtil
 import cn.chenchl.mvvm.BaseViewModel
+import cn.chenchl.mvvm.RepoMediatorLiveData
 import com.zaaach.citypicker.CityPicker
 import com.zaaach.citypicker.adapter.OnPickListener
 import com.zaaach.citypicker.model.City
@@ -38,9 +38,9 @@ class WeatherViewModel : BaseViewModel() {
 
     val srlColor: MutableLiveData<Int> = MutableLiveData(R.color.colorAccent)
 
-    val weatherData: MutableLiveData<CityWeather> = MutableLiveData()
+    val weatherData = RepoMediatorLiveData<CityWeather>(repository.weatherData)
 
-    val jokeData: MutableLiveData<List<Joke>> = MutableLiveData()
+    val jokeData = RepoMediatorLiveData<List<Joke>>(repository.jokeList)
 
     val refreshing: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -51,19 +51,10 @@ class WeatherViewModel : BaseViewModel() {
     fun requestWeather(city: String = cityName, isRefresh: Boolean = true) {
         refreshing.value = true
         repository.getWeather(city, isRefresh, getLifecycle()!!)
-            .observe(getLifecycleOwner().get()!!,
-                Observer {
-                    weatherData.value = it
-                    refreshing.value = false
-                })
     }
 
     fun requestJokeList(isRefresh: Boolean = true) {
         repository.getJokeList(isRefresh, getLifecycle()!!)
-            .observe(getLifecycleOwner().get()!!,
-                Observer {
-                    jokeData.value = it
-                })
     }
 
     override fun onResume(owner: LifecycleOwner) {

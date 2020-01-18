@@ -119,6 +119,9 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
             jokeListAdapter.clear()
             jokeListAdapter.addDataList(it)
         })
+        viewModel.weatherData.observe(this, Observer {
+            viewModel.refreshing.value = false
+        })
     }
 
 }
