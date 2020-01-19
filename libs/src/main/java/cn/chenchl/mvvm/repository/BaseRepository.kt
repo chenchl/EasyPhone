@@ -1,7 +1,5 @@
 package cn.chenchl.mvvm.repository
 
-import cn.chenchl.libs.log.LogUtil
-import com.google.gson.Gson
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
@@ -15,8 +13,6 @@ abstract class BaseRepository<Dao : BaseDao, Net : BaseNet>(
 ) : IRepository, Consumer<Disposable> {
 
     private val compositeDisposable by lazy { CompositeDisposable() }
-
-    private val gSon: Gson = Gson()
 
     override fun onCleared() {
         // dispose()调用后 后续加入CompositeDisposable的所有Disposable对象在加入时就会被dispose掉，
@@ -34,17 +30,5 @@ abstract class BaseRepository<Dao : BaseDao, Net : BaseNet>(
     }
 
     fun addSubscriber(disposable: Disposable) = compositeDisposable.add(disposable)
-
-    fun <T> toJson(objects: T): String = gSon.toJson(objects)
-
-    fun <T> fromJson(json: String?, clazz: Class<T>): T? {
-        return try {
-            gSon.fromJson(json, clazz)
-        } catch (e: Exception) {
-            LogUtil.e(e.message)
-            e.printStackTrace()
-            null
-        }
-    }
 
 }

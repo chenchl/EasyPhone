@@ -4,8 +4,8 @@ import android.text.TextUtils
 import cn.chenchl.easyphone.weather.data.bean.WeatherKind
 import cn.chenchl.libs.cache.LocalCache
 import cn.chenchl.libs.file.FileUtils
+import cn.chenchl.libs.utils.GSonUtil
 import cn.chenchl.mvvm.repository.BaseDao
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,7 +41,7 @@ object WeatherDao : BaseDao() {
             val stringFromAssetFile = FileUtils.getStringFromAssetFile("weather_kind")
             val listType = object :
                 TypeToken<ArrayList<WeatherKind>>() {}.type
-            Gson().fromJson<ArrayList<WeatherKind>>(stringFromAssetFile, listType)
+            GSonUtil.fromJson(stringFromAssetFile, listType)
         } catch (e: Exception) {
             e.printStackTrace()
             ArrayList()

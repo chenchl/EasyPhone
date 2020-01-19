@@ -13,8 +13,8 @@ import cn.chenchl.libs.Utils
 import cn.chenchl.libs.network.retrofit.DefaultResponseSubscriber
 import cn.chenchl.libs.network.retrofit.NetError
 import cn.chenchl.libs.rxjava.RxJavaTransformers
+import cn.chenchl.libs.utils.GSonUtil
 import cn.chenchl.mvvm.repository.BaseRepository
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.jetbrains.anko.toast
 
@@ -57,7 +57,7 @@ class WeatherRepository(
                 .subscribeWith(object : DefaultResponseSubscriber<CityWeatherModel, CityWeather>() {
                     override fun onSuccess(data: CityWeather?) {
                         weatherDataConversion(data)
-                        dao.insertTodayWeather(toJson(data))
+                        dao.insertTodayWeather(GSonUtil.toJson(data))
                         dao.insertCurrentCity(data?.city)
                         weatherData.value = data
                     }
@@ -69,7 +69,7 @@ class WeatherRepository(
                 })
             addSubscriber(dispose)
         } else {
-            weatherData.value = fromJson(weatherJson, CityWeather::class.java)
+            weatherData.value = GSonUtil.fromJson(weatherJson, CityWeather::class.java)
         }
     }
 
@@ -81,7 +81,7 @@ class WeatherRepository(
                 .compose(RxJavaTransformers.getDefaultScheduler())
                 .subscribeWith(object : DefaultResponseSubscriber<JokeListModel, List<Joke>>() {
                     override fun onSuccess(data: List<Joke>?) {
-                        dao.insertJokeList(toJson(data))
+                        dao.insertJokeList(GSonUtil.toJson(data))
                         jokeList.value = data
                     }
 
@@ -94,7 +94,7 @@ class WeatherRepository(
         } else {
             val listType = object :
                 TypeToken<List<Joke>>() {}.type
-            jokeList.value = Gson().fromJson<List<Joke>>(jokeListJson, listType)
+            jokeList.value = GSonUtil.fromJson(jokeListJson, listType)
         }
     }
 
