@@ -90,14 +90,18 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE
         ) {
-            LocationManager.getCurrentLocationCity({ city, _, _ ->
-                if (!TextUtils.equals(viewModel.cityName, city)) {
-                    viewModel.cityName = city
-                    viewModel.requestWeather()
-                }
-            }, {
-                runUiThread {
-                    Utils.getApp().toast(it)
+            LocationManager.getCurrentLocationCity()
+            LocationManager.aMapLocationData.observe(this, Observer {
+                if (it.errorCode == 0) {
+                    val city = it.city.replace("市", "")
+                    if (!TextUtils.equals(viewModel.cityName, city)) {
+                        viewModel.cityName = city
+                        viewModel.requestWeather()
+                    }
+                } else {
+                    runUiThread {
+                        Utils.getApp().toast(it.errorInfo)
+                    }
                 }
             })
         }
