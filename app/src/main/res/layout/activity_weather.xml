@@ -107,10 +107,10 @@
             android:gravity="center_vertical|bottom">
 
             <TextView
-                android:contentDescription="切换城市"
+                NoFastOnClick="@{()->vm.onChangeCity()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{()->vm.onChangeCity()}"
+                android:contentDescription="切换城市"
                 android:padding="@dimen/x30"
                 android:text="@string/change_city"
                 android:textColor="@{vm.titleColor}"

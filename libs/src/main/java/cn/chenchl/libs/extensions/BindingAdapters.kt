@@ -1,8 +1,10 @@
 package cn.chenchl.libs.extensions
 
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import cn.chenchl.libs.FastClickUtils
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 
@@ -33,4 +35,20 @@ fun ImageView.loadPicasso(url: String?, resId: Int) {
 @BindingAdapter("colorSchemeResources")
 fun SwipeRefreshLayout.colorSchemeResources(resId: Int) {
     setColorSchemeResources(resId)
+}
+
+@BindingAdapter("NoFastOnClick")
+inline fun View.noFastOnClick(crossinline onClick: () -> Unit) {
+    setOnClickListener {
+        if (!FastClickUtils.isFastClick)
+            onClick()
+    }
+}
+
+@BindingAdapter("NoFastOnClick")
+fun View.noFastOnClick(onClick: View.OnClickListener) {
+    setOnClickListener {
+        if (!FastClickUtils.isFastClick)
+            onClick.onClick(it)
+    }
 }
