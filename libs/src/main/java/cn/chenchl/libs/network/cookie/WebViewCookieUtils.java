@@ -3,6 +3,7 @@
  */
 package cn.chenchl.libs.network.cookie;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
@@ -17,6 +18,7 @@ public class WebViewCookieUtils {
     public static final String KJsessionidCookie = "JSESSIONID_COOKIE";
     private Context mContext;
     private String mCookies = "";
+    @SuppressLint("StaticFieldLeak")
     private static WebViewCookieUtils mCookieUtils = null;
 
     public WebViewCookieUtils(Context context) {

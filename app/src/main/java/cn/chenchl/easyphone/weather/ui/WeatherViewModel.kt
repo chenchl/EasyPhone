@@ -38,6 +38,7 @@ class WeatherViewModel : BaseViewModel() {
     val srlColor: MutableLiveData<Int> = MutableLiveData(R.color.colorAccent)
 
     val weatherData = RepoMediatorLiveData<CityWeather>(repository.weatherData)
+    //map写法：val weatherData = Transformations.map(repository.weatherData) { it }  效果是一样的
 
     val jokeData = RepoMediatorLiveData<List<Joke>>(repository.jokeList)
 

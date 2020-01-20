@@ -12,7 +12,7 @@ object LocalCache : ICache {
     private var cache: ICache? = null
 
     fun init(cache: ICache, context: Context) {
-        this.cache = cache;
+        this.cache = cache
         this.config = cache.config
         this.cache?.init(context)
     }
@@ -45,7 +45,7 @@ object LocalCache : ICache {
     override fun contains(fileName: String, key: String): Boolean? = cache?.contains(fileName, key)
 
     operator fun contains(key: String): Boolean {
-        var result = cache?.contains(key = key)
+        val result = cache?.contains(key = key)
         return result ?: false
     }
 

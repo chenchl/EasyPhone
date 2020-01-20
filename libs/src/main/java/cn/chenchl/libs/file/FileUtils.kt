@@ -9,7 +9,7 @@ import java.io.InputStreamReader
 object FileUtils {
 
     fun getStringFromAssetFile(fileName: String): String {
-        var str: String = ""
+        var str = ""
         try {
             str = InputStreamReader(Utils.getApp().assets.open(fileName)).readText()
         } catch (e: Exception) {
