@@ -1,9 +1,12 @@
 package cn.chenchl.easyphone.weather.data.dao
 
 import android.text.TextUtils
+import cn.chenchl.easyphone.weather.data.bean.JokeInfo
 import cn.chenchl.easyphone.weather.data.bean.WeatherKind
+import cn.chenchl.easyphone.weather.data.database.JokeDatabase
 import cn.chenchl.libs.cache.LocalCache
 import cn.chenchl.libs.file.FileUtils
+import cn.chenchl.libs.log.LogUtil
 import cn.chenchl.libs.utils.GSonUtil
 import cn.chenchl.mvvm.repository.BaseDao
 import com.google.gson.reflect.TypeToken
@@ -15,6 +18,8 @@ import kotlin.collections.ArrayList
  * created by ccl on 2020/1/15
  **/
 object WeatherDao : BaseDao() {
+
+    private val jokeDao = JokeDatabase.instance.jokeDao()
 
     private val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
 
@@ -30,10 +35,24 @@ object WeatherDao : BaseDao() {
         LocalCache[today] = weatherJson
     }
 
-    fun queryJokeList(): String? = LocalCache["jokeList", ""]
+    fun queryJokeList(): String? {
+        Thread(Runnable {
+            val jokeList = jokeDao.queryAll()
+            LogUtil.i("jokeList", jokeList.toString())
+        }).start()
+        return LocalCache["jokeList", ""]
+    }
 
     fun insertJokeList(jokeJson: String) {
         LocalCache["jokeList"] = jokeJson
+        Thread(Runnable {
+            jokeDao.deleteAll()
+            val listType = object :
+                TypeToken<List<JokeInfo>>() {}.type
+            val list = GSonUtil.fromJson<List<JokeInfo>>(jokeJson, listType)
+            jokeDao.insertJokeList(*list.toTypedArray())
+        }).start()
+
     }
 
     private fun loadWeatherKindFromAsset(): ArrayList<WeatherKind> {
