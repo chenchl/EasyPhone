@@ -87,6 +87,7 @@ class MMKVCache private constructor() : ICache {
         LogUtil.i(TAG!!, "mmkv $fileName _put :$key ,value = $value result = $result")
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun <T> _get(fileName: String, key: String, defValue: T): T? {
         val mmkv = MMKV.mmkvWithID(fileName, MMKV.SINGLE_PROCESS_MODE, config.cryptKey)
         var result: T? = null

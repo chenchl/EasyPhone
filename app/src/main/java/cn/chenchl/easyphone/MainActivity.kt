@@ -34,12 +34,12 @@ class MainActivity : AppCompatActivity() {
         LocalCache.set(key = "3", value = true)
         doAsync {
             LogUtil.e(MainActivity::class.simpleName, Thread.currentThread().name)
-            val get = LocalCache.get(key = "111", defValue = 11)
+            /*val get = LocalCache.get(key = "111", defValue = 11)
             val get1 = LocalCache.get(key = "1", defValue = 2)
             val get2 = LocalCache.get(key = "23", defValue = " sad")
             val get3 = LocalCache.get(key = "2", defValue = " 1")
             val get4 = LocalCache.get(key = "3", defValue = false)
-            val get5 = LocalCache.get(key = "4", defValue = false)
+            val get5 = LocalCache.get(key = "4", defValue = false)*/
         }
         doAsync {
             val b = "23" in LocalCache
