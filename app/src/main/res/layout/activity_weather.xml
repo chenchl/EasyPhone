@@ -16,6 +16,10 @@
         <variable
             name="vm"
             type="cn.chenchl.easyphone.weather.ui.WeatherViewModel" />
+
+        <variable
+            name="view"
+            type="cn.chenchl.easyphone.weather.ui.WeatherActivity" />
     </data>
 
     <FrameLayout
@@ -107,10 +111,10 @@
             android:gravity="center_vertical|bottom">
 
             <TextView
-                NoFastOnClick="@{()->vm.onChangeCity()}"
+                NoFastOnClick="@{()->view.onChangeCity()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="切换城市"
+                android:contentDescription="@string/change_city"
                 android:padding="@dimen/x30"
                 android:text="@string/change_city"
                 android:textColor="@{vm.titleColor}"

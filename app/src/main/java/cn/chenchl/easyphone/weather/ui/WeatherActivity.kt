@@ -19,6 +19,12 @@ import cn.chenchl.libs.extensions.checkPermissions
 import cn.chenchl.libs.extensions.getStatusBarHeight
 import cn.chenchl.libs.extensions.runUiThread
 import cn.chenchl.mvvm.BaseMVVMActivity
+import com.amap.api.location.AMapLocation
+import com.zaaach.citypicker.CityPicker
+import com.zaaach.citypicker.adapter.OnPickListener
+import com.zaaach.citypicker.model.City
+import com.zaaach.citypicker.model.LocateState
+import com.zaaach.citypicker.model.LocatedCity
 import kotlinx.android.synthetic.main.activity_weather.*
 import org.jetbrains.anko.doFromSdk
 import org.jetbrains.anko.toast
@@ -42,6 +48,8 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        //绑定activity到dataBinding
+        binding.view = this
         //设置topMargin防止被状态栏挡住
         val layoutParams = swiperefreshlayout.layoutParams as FrameLayout.LayoutParams
         layoutParams.topMargin = getStatusBarHeight()
@@ -81,6 +89,44 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
         }
     }
 
+    //写法1 类似java的匿名类形式
+    /*private val locationObserver1: Observer<AMapLocation> = object : Observer<AMapLocation> {
+       override fun onChanged(t: AMapLocation) {
+           if (t.errorCode == 0) {
+               val city = t.city.replace("市", "")
+               if (!TextUtils.equals(viewModel.cityName, city)) {
+                   viewModel.cityName = city
+                   viewModel.requestWeather()
+               }
+           } else {
+               runUiThread {
+                   Utils.getApp().toast(t.errorInfo)
+               }
+           }
+           //只监听一次 防止后续重复收到
+           LocationManager.aMapLocationData.removeObserver(this)
+       }
+   }*/
+
+    //写法2 使用run
+    private val locationObserver: Observer<AMapLocation> = run {
+        Observer {
+            //只监听一次 防止后续重复收到
+            LocationManager.aMapLocationData.removeObserver(locationObserver)
+            if (it.errorCode == 0) {
+                val city = it.city.replace("市", "")
+                if (!TextUtils.equals(viewModel.cityName, city)) {
+                    viewModel.cityName = city
+                    viewModel.requestWeather()
+                }
+            } else {
+                runUiThread {
+                    Utils.getApp().toast(it.errorInfo)
+                }
+            }
+        }
+    }
+
     override fun initData(savedInstanceState: Bundle?) {
         //检查权限
         checkPermissions(
@@ -91,19 +137,6 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
             Manifest.permission.READ_PHONE_STATE
         ) {
             LocationManager.getCurrentLocationCity()
-            LocationManager.aMapLocationData.observe(this, Observer {
-                if (it.errorCode == 0) {
-                    val city = it.city.replace("市", "")
-                    if (!TextUtils.equals(viewModel.cityName, city)) {
-                        viewModel.cityName = city
-                        viewModel.requestWeather()
-                    }
-                } else {
-                    runUiThread {
-                        Utils.getApp().toast(it.errorInfo)
-                    }
-                }
-            })
         }
         viewModel.requestWeather(isRefresh = false)
         viewModel.requestJokeList(isRefresh = false)
@@ -114,6 +147,7 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
     }
 
     override fun initViewObservable() {
+        LocationManager.aMapLocationData.observe(this, locationObserver)
         viewModel.refreshing.observe(this, Observer {
             if (it) {
                 scrollView.smoothScrollTo(0, 0)
@@ -126,6 +160,45 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
         viewModel.weatherData.observe(this, Observer {
             viewModel.refreshing.value = false
         })
+    }
+
+    val cityPicker: CityPicker by lazy(LazyThreadSafetyMode.NONE) {
+        CityPicker.from(this) //activity或者fragment
+            .enableAnimation(true)    //启用动画效果，默认无
+            .setOnPickListener(object : OnPickListener {
+                override fun onPick(position: Int, data: City?) {
+                    viewModel.cityName = data?.name ?: "绵阳"
+                    viewModel.requestWeather()
+                }
+
+                override fun onCancel() {
+
+                }
+
+                override fun onLocate() {
+                    LocationManager.getCurrentLocationCity({ city, province, cityCode ->
+                        cityPicker.locateComplete(
+                            LocatedCity(
+                                city,
+                                province,
+                                cityCode
+                            ), LocateState.SUCCESS
+                        )
+                    }, {
+                        cityPicker.locateComplete(
+                            LocatedCity(
+                                "北京",
+                                "北京",
+                                "101010100"
+                            ), LocateState.FAILURE
+                        )
+                    })
+                }
+            })
+    }
+
+    fun onChangeCity() {
+        cityPicker.show()
     }
 
 }

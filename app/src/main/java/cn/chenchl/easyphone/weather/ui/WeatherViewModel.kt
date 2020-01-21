@@ -1,26 +1,18 @@
 package cn.chenchl.easyphone.weather.ui
 
 import android.graphics.Color
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import cn.chenchl.easyphone.R
-import cn.chenchl.easyphone.utils.location.LocationManager
 import cn.chenchl.easyphone.weather.data.WeatherRepository
 import cn.chenchl.easyphone.weather.data.bean.CityWeather
 import cn.chenchl.easyphone.weather.data.bean.Joke
 import cn.chenchl.easyphone.weather.data.dao.WeatherDao
 import cn.chenchl.easyphone.weather.data.net.WeatherNetwork
-import cn.chenchl.libs.Utils
 import cn.chenchl.libs.cache.LocalCache
 import cn.chenchl.libs.rxjava.RxLifecycleUtil
 import cn.chenchl.mvvm.BaseViewModel
 import cn.chenchl.mvvm.RepoMediatorLiveData
-import com.zaaach.citypicker.CityPicker
-import com.zaaach.citypicker.adapter.OnPickListener
-import com.zaaach.citypicker.model.City
-import com.zaaach.citypicker.model.LocateState
-import com.zaaach.citypicker.model.LocatedCity
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
@@ -66,7 +58,6 @@ class WeatherViewModel : BaseViewModel() {
     override fun onDestroy(owner: LifecycleOwner) {
         super.onDestroy(owner)
         repository.disposeAll()
-        cityPicker = null
     }
 
     private fun refreshBgOnTimer(owner: LifecycleOwner) {
@@ -79,52 +70,6 @@ class WeatherViewModel : BaseViewModel() {
     fun onRefresh() {
         requestWeather()
         requestJokeList()
-    }
-
-    var cityPicker: CityPicker? = null
-
-    fun onChangeCity() {
-        if (Utils.getTopActivityOrApp() is FragmentActivity) {
-            if (cityPicker == null) {
-                cityPicker =
-                    CityPicker.from(Utils.getTopActivityOrApp() as FragmentActivity) //activity或者fragment
-                        .enableAnimation(true)    //启用动画效果，默认无
-                        //.setLocatedCity(LocatedCity("绵阳", "四川", "101212059"))  //APP自身已定位的城市，传null会自动定位（默认）
-                        //.setHotCities(hotCities)    //指定热门城市
-                        .setOnPickListener(object : OnPickListener {
-                            override fun onPick(position: Int, data: City?) {
-                                cityName = data?.name ?: "绵阳"
-                                requestWeather()
-                            }
-
-                            override fun onCancel() {
-
-                            }
-
-                            override fun onLocate() {
-                                LocationManager.getCurrentLocationCity({ city, province, cityCode ->
-                                    cityPicker?.locateComplete(
-                                        LocatedCity(
-                                            city,
-                                            province,
-                                            cityCode
-                                        ), LocateState.SUCCESS
-                                    )
-                                }, {
-                                    cityPicker?.locateComplete(
-                                        LocatedCity(
-                                            "北京",
-                                            "北京",
-                                            "101010100"
-                                        ), LocateState.FAILURE
-                                    )
-                                })
-                            }
-                        })
-            }
-            cityPicker?.show()
-
-        }
     }
 
     override fun onCleared() {
