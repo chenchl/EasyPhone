@@ -128,7 +128,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                NoFastOnClick="@{()->view.toOtherCity()}"
+                NoFastOnClick="@{view::toOtherCity}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/other_city"
