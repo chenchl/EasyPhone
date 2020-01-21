@@ -44,9 +44,7 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
-    kapt {
-        generateStubs = true
-    }
+
 }
 
 dependencies {

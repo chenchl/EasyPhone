@@ -5,4 +5,5 @@
     <string name="air_quality">空气质量\n%s</string>
     <string name="air_humidity">湿度\n%s</string>
     <string name="change_city">切换城市</string>
+    <string name="other_city">其他城市</string>
 </resources>

@@ -37,13 +37,14 @@ fun SwipeRefreshLayout.colorSchemeResources(resId: Int) {
     setColorSchemeResources(resId)
 }
 
-@BindingAdapter("NoFastOnClick")
+//kapt暂时有bug 不支持kotlin 高阶函数这种写法
+/*@BindingAdapter("NoFastOnClick")
 inline fun View.noFastOnClick(crossinline onClick: () -> Unit) {
     setOnClickListener {
         if (!FastClickUtils.isFastClick)
             onClick()
     }
-}
+}*/
 
 @BindingAdapter("NoFastOnClick")
 fun View.noFastOnClick(onClick: View.OnClickListener) {

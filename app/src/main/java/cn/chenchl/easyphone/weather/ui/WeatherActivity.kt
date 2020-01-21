@@ -201,4 +201,8 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
         cityPicker.show()
     }
 
+    fun toOtherCity() {
+        //startActivity<OtherCityWeatherActivity>()
+    }
+
 }

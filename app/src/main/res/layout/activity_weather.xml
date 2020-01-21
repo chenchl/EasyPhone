@@ -120,6 +120,23 @@
                 android:textColor="@{vm.titleColor}"
                 android:textSize="@dimen/x36"
                 android:textStyle="bold" />
+
+            <View
+                android:id="@+id/statusbar_1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/x10"
+                android:layout_weight="1" />
+
+            <TextView
+                NoFastOnClick="@{()->view.toOtherCity()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/other_city"
+                android:padding="@dimen/x30"
+                android:text="@string/other_city"
+                android:textColor="@{vm.titleColor}"
+                android:textSize="@dimen/x36"
+                android:textStyle="bold" />
         </LinearLayout>
     </FrameLayout>
 </layout>

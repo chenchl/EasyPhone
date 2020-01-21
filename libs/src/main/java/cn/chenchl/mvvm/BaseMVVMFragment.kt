@@ -50,6 +50,7 @@ abstract class BaseMVVMFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragm
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initVM2DB()
+        initView(savedInstanceState)
         initData(savedInstanceState)
         initViewObservable()
     }
@@ -59,6 +60,10 @@ abstract class BaseMVVMFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragm
     }
 
     override fun initViewObservable() {
+
+    }
+
+    override fun initView(savedInstanceState: Bundle?) {
 
     }
 
