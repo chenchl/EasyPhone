@@ -1,7 +1,7 @@
 package cn.chenchl.easyphone.weather.data.model
 
 import androidx.annotation.Keep
-import cn.chenchl.easyphone.weather.data.bean.Joke
+import cn.chenchl.easyphone.weather.data.bean.JokeInfo
 import cn.chenchl.libs.network.bean.IModel
 
 /**
@@ -9,16 +9,16 @@ import cn.chenchl.libs.network.bean.IModel
  **/
 @Keep
 class JokeListModel(
-    private val result: List<Joke>,
+    private val result: List<JokeInfo>,
     private val reason: String,
     private val error_code: Int
-) : IModel<List<Joke>> {
+) : IModel<List<JokeInfo>> {
 
     override fun isSuccess(): Boolean = error_code == 0
 
     override fun responseCode(): Int = error_code
 
-    override fun responseData(): List<Joke> = result
+    override fun responseData(): List<JokeInfo> = result
 
     override fun responseMsg(): String = reason
 

@@ -1,9 +1,6 @@
 package cn.chenchl.libs.rxjava
 
-import io.reactivex.Flowable
-import io.reactivex.FlowableTransformer
-import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
+import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -26,6 +23,13 @@ object RxJavaTransformers {
 
     fun <T> getObservableScheduler(): ObservableTransformer<T, T> {
         return ObservableTransformer { upstream: Observable<T> ->
+            upstream.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+        }
+    }
+
+    fun <T> getSingleScheduler(): SingleTransformer<T, T> {
+        return SingleTransformer { upstream: Single<T> ->
             upstream.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
         }

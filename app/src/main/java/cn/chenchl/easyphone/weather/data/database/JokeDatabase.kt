@@ -5,7 +5,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import cn.chenchl.easyphone.weather.data.bean.JokeInfo
-import cn.chenchl.easyphone.weather.data.dao.JokeDao
 import cn.chenchl.libs.Utils
 import cn.chenchl.libs.log.LogUtil
 
@@ -15,7 +14,7 @@ import cn.chenchl.libs.log.LogUtil
 @Database(entities = [JokeInfo::class], version = 1)
 abstract class JokeDatabase : RoomDatabase() {
 
-    abstract fun jokeDao(): JokeDao
+    abstract fun jokeDao(): JokeDataBaseDao
 
     companion object {
 

@@ -7,7 +7,7 @@
 
         <variable
             name="joke"
-            type="List&lt;cn.chenchl.easyphone.weather.data.bean.Joke&gt;" />
+            type="List&lt;cn.chenchl.easyphone.weather.data.bean.JokeInfo&gt;" />
     </data>
 
     <LinearLayout

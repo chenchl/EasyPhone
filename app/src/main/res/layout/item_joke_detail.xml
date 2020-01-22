@@ -7,12 +7,8 @@
         <import type="cn.chenchl.easyphone.utils.TimeUtils" />
 
         <variable
-            name="utils"
-            type="TimeUtils" />
-
-        <variable
             name="joke"
-            type="cn.chenchl.easyphone.weather.data.bean.Joke" />
+            type="cn.chenchl.easyphone.weather.data.bean.JokeInfo" />
     </data>
 
     <LinearLayout
@@ -26,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:text="@{utils.getTimeByUnixTime(joke.unixtime)}"
+            android:text="@{TimeUtils.getTimeByUnixTime(joke.unixtime)}"
             android:textColor="@color/white"
             android:textSize="@dimen/x40"
             tools:text="2020-01-15" />

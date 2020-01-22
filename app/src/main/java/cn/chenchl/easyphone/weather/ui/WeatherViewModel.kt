@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import cn.chenchl.easyphone.R
 import cn.chenchl.easyphone.weather.data.WeatherRepository
 import cn.chenchl.easyphone.weather.data.bean.CityWeather
-import cn.chenchl.easyphone.weather.data.bean.Joke
 import cn.chenchl.easyphone.weather.data.dao.WeatherDao
+import cn.chenchl.easyphone.weather.data.bean.JokeInfo
 import cn.chenchl.easyphone.weather.data.net.WeatherNetwork
 import cn.chenchl.libs.cache.LocalCache
 import cn.chenchl.libs.rxjava.RxLifecycleUtil
@@ -32,7 +32,7 @@ class WeatherViewModel : BaseViewModel() {
     val weatherData = RepoMediatorLiveData<CityWeather>(repository.weatherData)
     //map写法：val weatherData = Transformations.map(repository.weatherData) { it }  效果是一样的
 
-    val jokeData = RepoMediatorLiveData<List<Joke>>(repository.jokeList)
+    val jokeData = RepoMediatorLiveData<List<JokeInfo>>(repository.jokeList)
 
     val refreshing: MutableLiveData<Boolean> = MutableLiveData()
 

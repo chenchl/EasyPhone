@@ -7,9 +7,15 @@ import cn.chenchl.easyphone.weather.data.database.JokeDatabase
 import cn.chenchl.libs.cache.LocalCache
 import cn.chenchl.libs.file.FileUtils
 import cn.chenchl.libs.log.LogUtil
+import cn.chenchl.libs.rxjava.RxJavaTransformers
 import cn.chenchl.libs.utils.GSonUtil
 import cn.chenchl.mvvm.repository.BaseDao
 import com.google.gson.reflect.TypeToken
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.FlowableEmitter
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,24 +41,29 @@ object WeatherDao : BaseDao() {
         LocalCache[today] = weatherJson
     }
 
-    fun queryJokeList(): String? {
-        Thread(Runnable {
-            val jokeList = jokeDao.queryAll()
-            LogUtil.i("jokeList", jokeList.toString())
-        }).start()
-        return LocalCache["jokeList", ""]
+    fun queryJokeList(result: (List<JokeInfo>) -> Unit) {
+        var disposable: Disposable? = null
+        disposable = jokeDao.queryAll()
+            .compose(RxJavaTransformers.getDefaultScheduler())
+            .subscribe {
+                LogUtil.i("Room",it.toString())
+                if (disposable != null) //只需要1次数据 防止数据倒灌
+                    disposable!!.dispose()
+                result(it)
+            }
     }
 
-    fun insertJokeList(jokeJson: String) {
-        LocalCache["jokeList"] = jokeJson
-        Thread(Runnable {
-            jokeDao.deleteAll()
-            val listType = object :
-                TypeToken<List<JokeInfo>>() {}.type
-            val list = GSonUtil.fromJson<List<JokeInfo>>(jokeJson, listType)
-            jokeDao.insertJokeList(*list.toTypedArray())
-        }).start()
-
+    fun insertJokeList(data: List<JokeInfo>?) {
+        Flowable.create<Int>(
+            { emitter: FlowableEmitter<Int> ->
+                jokeDao.deleteAll()
+                data?.let { jokeDao.insertJokeList(*data.toTypedArray()) }
+                emitter.onNext(1)
+                emitter.onComplete()
+            },
+            BackpressureStrategy.BUFFER
+        ).subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     private fun loadWeatherKindFromAsset(): ArrayList<WeatherKind> {

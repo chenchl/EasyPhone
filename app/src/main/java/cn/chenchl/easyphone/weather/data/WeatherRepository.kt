@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import cn.chenchl.easyphone.weather.data.bean.CityWeather
-import cn.chenchl.easyphone.weather.data.bean.Joke
+import cn.chenchl.easyphone.weather.data.bean.JokeInfo
 import cn.chenchl.easyphone.weather.data.dao.WeatherDao
 import cn.chenchl.easyphone.weather.data.model.CityWeatherModel
 import cn.chenchl.easyphone.weather.data.model.JokeListModel
@@ -15,7 +15,6 @@ import cn.chenchl.libs.network.retrofit.NetError
 import cn.chenchl.libs.rxjava.RxJavaTransformers
 import cn.chenchl.libs.utils.GSonUtil
 import cn.chenchl.mvvm.repository.BaseRepository
-import com.google.gson.reflect.TypeToken
 import org.jetbrains.anko.toast
 
 /**
@@ -26,7 +25,7 @@ class WeatherRepository(
     net: WeatherNetwork
 ) : BaseRepository<WeatherDao, WeatherNetwork>(dao, net) {
 
-    val jokeList: MutableLiveData<List<Joke>> = MutableLiveData()
+    val jokeList: MutableLiveData<List<JokeInfo>> = MutableLiveData()
 
     val weatherData: MutableLiveData<CityWeather> = MutableLiveData()
 
@@ -75,12 +74,32 @@ class WeatherRepository(
 
     @SuppressLint("CheckResult")
     fun getJokeList(isRefresh: Boolean) {
-        val jokeListJson = dao.queryJokeList()
-        if (TextUtils.isEmpty(jokeListJson) || isRefresh) {
+        dao.queryJokeList {
+            if (it.isEmpty() || isRefresh) {
+                val dispose = network.getJokeList()
+                    .compose(RxJavaTransformers.getDefaultScheduler())
+                    .subscribeWith(object :
+                        DefaultResponseSubscriber<JokeListModel, List<JokeInfo>>() {
+                        override fun onSuccess(data: List<JokeInfo>?) {
+                            dao.insertJokeList(data)
+                            jokeList.value = data
+                        }
+
+                        override fun onFail(error: NetError) {
+                            jokeList.value = null
+                            Utils.getApp().toast(error.message!!)
+                        }
+                    })
+                addSubscriber(dispose)
+            } else {
+                jokeList.value = it
+            }
+        }
+        /*if (TextUtils.isEmpty(jokeListJson) || isRefresh) {
             val dispose = network.getJokeList()
                 .compose(RxJavaTransformers.getDefaultScheduler())
-                .subscribeWith(object : DefaultResponseSubscriber<JokeListModel, List<Joke>>() {
-                    override fun onSuccess(data: List<Joke>?) {
+                .subscribeWith(object : DefaultResponseSubscriber<JokeListModel, List<JokeInfo>>() {
+                    override fun onSuccess(data: List<JokeInfo>?) {
                         dao.insertJokeList(GSonUtil.toJson(data))
                         jokeList.value = data
                     }
@@ -93,9 +112,9 @@ class WeatherRepository(
             addSubscriber(dispose)
         } else {
             val listType = object :
-                TypeToken<List<Joke>>() {}.type
+                TypeToken<List<JokeInfo>>() {}.type
             jokeList.value = GSonUtil.fromJson(jokeListJson, listType)
-        }
+        }*/
     }
 
     /**

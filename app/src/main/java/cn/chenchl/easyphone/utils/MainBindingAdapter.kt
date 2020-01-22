@@ -8,7 +8,7 @@ import cn.chenchl.easyphone.R
 import cn.chenchl.easyphone.databinding.ItemFutureWeatherDetailBinding
 import cn.chenchl.easyphone.databinding.ItemJokeDetailBinding
 import cn.chenchl.easyphone.weather.data.bean.CityWeather
-import cn.chenchl.easyphone.weather.data.bean.Joke
+import cn.chenchl.easyphone.weather.data.bean.JokeInfo
 
 /**
  * created by ccl on 2020/1/15
@@ -28,7 +28,7 @@ fun LinearLayout.showFuture(futures: List<CityWeather.Future>?) {
 }
 
 @BindingAdapter("showJokeList")
-fun LinearLayout.showJokeList(jokeList: List<Joke>?) {
+fun LinearLayout.showJokeList(jokeList: List<JokeInfo>?) {
     removeAllViews()
     jokeList?.let {
         for (joke in jokeList) {
@@ -37,7 +37,6 @@ fun LinearLayout.showJokeList(jokeList: List<Joke>?) {
                     .inflate(R.layout.item_joke_detail, this, false)
             val bind = DataBindingUtil.bind<ItemJokeDetailBinding>(view)
             bind?.joke = joke
-            bind?.utils = TimeUtils
             addView(view)
         }
     }
