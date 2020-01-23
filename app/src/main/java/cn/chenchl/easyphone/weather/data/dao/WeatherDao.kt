@@ -1,5 +1,6 @@
 package cn.chenchl.easyphone.weather.data.dao
 
+import android.annotation.SuppressLint
 import android.text.TextUtils
 import cn.chenchl.easyphone.weather.data.bean.JokeInfo
 import cn.chenchl.easyphone.weather.data.bean.WeatherKind
@@ -14,7 +15,6 @@ import com.google.gson.reflect.TypeToken
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,26 +31,27 @@ object WeatherDao : BaseDao() {
 
     private val weatherByWidList: ArrayList<WeatherKind> by lazy { loadWeatherKindFromAsset() }
 
-    fun queryTodayWeather(): String? {
+    fun queryTodayWeather(city: String): String? {
         val today = sdf.format(Date())
-        return LocalCache[today, ""]
+        return LocalCache["$city - $today", ""]
     }
 
-    fun insertTodayWeather(weatherJson: String) {
+    fun insertTodayWeather(city: String, weatherJson: String) {
         val today = sdf.format(Date())
-        LocalCache[today] = weatherJson
+        LocalCache["$city - $today"] = weatherJson
     }
 
+    @SuppressLint("CheckResult")
     fun queryJokeList(result: (List<JokeInfo>) -> Unit) {
-        var disposable: Disposable? = null
-        disposable = jokeDao.queryAll()
-            .compose(RxJavaTransformers.getDefaultScheduler())
-            .subscribe {
-                LogUtil.i("Room",it.toString())
-                if (disposable != null) //只需要1次数据 防止数据倒灌
-                    disposable!!.dispose()
+        jokeDao.queryAll()
+            .compose(RxJavaTransformers.getSingleScheduler())
+            .subscribe({
+                LogUtil.i("Room", it.toString())
                 result(it)
-            }
+            }, {
+                LogUtil.i("Room", it.message!!)
+                result(ArrayList())
+            })
     }
 
     fun insertJokeList(data: List<JokeInfo>?) {
@@ -92,5 +93,4 @@ object WeatherDao : BaseDao() {
             LocalCache["currentCity"] = city
     }
 
-    fun queryCurrentCity(): String = LocalCache["currentCity", "绵阳"]!!
 }

@@ -42,7 +42,7 @@
             colorSchemeResources="@{vm.srlColor}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            bind:onRefreshListener="@{()->vm.onRefresh()}"
+            bind:onRefreshListener="@{()->vm.onRefresh(true)}"
             bind:refreshing="@{vm.refreshing}">
 
             <androidx.core.widget.NestedScrollView

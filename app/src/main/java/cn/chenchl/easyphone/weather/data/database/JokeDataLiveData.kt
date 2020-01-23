@@ -10,15 +10,15 @@ import io.reactivex.disposables.Disposable
  * created by ccl on 2020/1/22
  **/
 class JokeDataLiveData : LiveData<List<JokeInfo>>() {
-    private val mJokeDao: JokeDataBaseDao = JokeDatabase.instance.jokeDao()
+    private val mJokeDao = JokeDatabase.instance.jokeDao()
     private var disposable: Disposable? = null
 
     @SuppressLint("CheckResult")
     override fun onActive() {
         super.onActive()
         disposable = mJokeDao.queryAll()
-            .compose(RxJavaTransformers.getDefaultScheduler())
-            .subscribe { value = it }
+            .compose(RxJavaTransformers.getSingleScheduler())
+            .subscribe({ value = it }, { value = ArrayList() })
     }
 
     override fun onInactive() {

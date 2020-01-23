@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import cn.chenchl.easyphone.R
 import cn.chenchl.easyphone.weather.data.WeatherRepository
 import cn.chenchl.easyphone.weather.data.bean.CityWeather
-import cn.chenchl.easyphone.weather.data.dao.WeatherDao
 import cn.chenchl.easyphone.weather.data.bean.JokeInfo
+import cn.chenchl.easyphone.weather.data.dao.WeatherDao
 import cn.chenchl.easyphone.weather.data.net.WeatherNetwork
 import cn.chenchl.libs.cache.LocalCache
 import cn.chenchl.libs.rxjava.RxLifecycleUtil
@@ -49,6 +49,10 @@ class WeatherViewModel : BaseViewModel() {
         repository.getJokeList(isRefresh)
     }
 
+    fun recordCurrentCity() {
+        repository.insertCurrentCity(cityName)
+    }
+
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
         //启动背景定时刷新
@@ -67,9 +71,10 @@ class WeatherViewModel : BaseViewModel() {
             .subscribe { bgUrl.value = bgUrl.value }
     }
 
-    fun onRefresh() {
+    fun onRefresh(isNeedJoke: Boolean = true) {
         requestWeather()
-        requestJokeList()
+        if (isNeedJoke)
+            requestJokeList()
     }
 
     override fun onCleared() {

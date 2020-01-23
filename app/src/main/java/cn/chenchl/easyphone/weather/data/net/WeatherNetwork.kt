@@ -9,7 +9,7 @@ import cn.chenchl.mvvm.repository.BaseNet
 object WeatherNetwork : BaseNet() {
     private const val WEATHER_BASE_URL = "https://apis.juhe.cn/simpleWeather/"
 
-    const val MAIN_BG_URL = "https://pic.tsmp4.net/api/fengjing/img.php"
+    const val MAIN_BG_URL = "https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"
 
     const val WEATHER_KEY = "12238789aa92a097fdf84ef15e10d1e4"
 

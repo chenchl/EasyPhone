@@ -31,7 +31,7 @@ class WeatherRepository(
 
     @SuppressLint("CheckResult")
     fun getWeather(city: String, isRefresh: Boolean) {
-        val weatherJson = dao.queryTodayWeather()
+        val weatherJson = dao.queryTodayWeather(city)
         if (TextUtils.isEmpty(weatherJson) || isRefresh) {
             //方案1（不推荐） 使用autoDispose自动管理 需传递lifecycle对象过来 容易造成内存泄漏
             /*network.getWeather(city)
@@ -56,8 +56,7 @@ class WeatherRepository(
                 .subscribeWith(object : DefaultResponseSubscriber<CityWeatherModel, CityWeather>() {
                     override fun onSuccess(data: CityWeather?) {
                         weatherDataConversion(data)
-                        dao.insertTodayWeather(GSonUtil.toJson(data))
-                        dao.insertCurrentCity(data?.city)
+                        dao.insertTodayWeather(city, GSonUtil.toJson(data))
                         weatherData.value = data
                     }
 
@@ -95,26 +94,11 @@ class WeatherRepository(
                 jokeList.value = it
             }
         }
-        /*if (TextUtils.isEmpty(jokeListJson) || isRefresh) {
-            val dispose = network.getJokeList()
-                .compose(RxJavaTransformers.getDefaultScheduler())
-                .subscribeWith(object : DefaultResponseSubscriber<JokeListModel, List<JokeInfo>>() {
-                    override fun onSuccess(data: List<JokeInfo>?) {
-                        dao.insertJokeList(GSonUtil.toJson(data))
-                        jokeList.value = data
-                    }
+    }
 
-                    override fun onFail(error: NetError) {
-                        jokeList.value = null
-                        Utils.getApp().toast(error.message!!)
-                    }
-                })
-            addSubscriber(dispose)
-        } else {
-            val listType = object :
-                TypeToken<List<JokeInfo>>() {}.type
-            jokeList.value = GSonUtil.fromJson(jokeListJson, listType)
-        }*/
+
+    fun insertCurrentCity(city: String) {
+        dao.insertCurrentCity(city)
     }
 
     /**

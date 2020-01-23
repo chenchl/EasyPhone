@@ -27,6 +27,7 @@ import com.zaaach.citypicker.model.LocateState
 import com.zaaach.citypicker.model.LocatedCity
 import kotlinx.android.synthetic.main.activity_weather.*
 import org.jetbrains.anko.doFromSdk
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewModel>() {
@@ -117,6 +118,7 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
                 val city = it.city.replace("市", "")
                 if (!TextUtils.equals(viewModel.cityName, city)) {
                     viewModel.cityName = city
+                    viewModel.recordCurrentCity()
                     viewModel.requestWeather()
                 }
             } else {
@@ -168,6 +170,7 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
             .setOnPickListener(object : OnPickListener {
                 override fun onPick(position: Int, data: City?) {
                     viewModel.cityName = data?.name ?: "绵阳"
+                    viewModel.recordCurrentCity()
                     viewModel.requestWeather()
                 }
 
@@ -202,8 +205,7 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
     }
 
     fun toOtherCity(view: View) {
-        toast(view::class.java.simpleName)
-        //startActivity<OtherCityWeatherActivity>()
+        startActivity<OtherCityWeatherActivity>()
     }
 
 }
