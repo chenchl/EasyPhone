@@ -3,13 +3,10 @@ package cn.chenchl.easyphone.weather.ui
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.chenchl.easyphone.BR
 import cn.chenchl.easyphone.R
 import cn.chenchl.easyphone.databinding.ActivityOtherCityWeatherBinding
 import cn.chenchl.libs.extensions.getStatusBarHeight
-import cn.chenchl.libs.widget.DepthPageTransformer
 import cn.chenchl.libs.widget.ZoomOutPageTransformer
 import cn.chenchl.mvvm.BaseMVVMActivity
 import com.zaaach.citypicker.CityPicker
@@ -26,7 +23,7 @@ class OtherCityWeatherActivity :
 
     val cityList: ArrayList<String> = ArrayList()
 
-    private val cityFragmentAdapter = MyFragmentStateAdapter(this, cityList)
+    private val cityFragmentAdapter = WeatherFragmentAdapter(this, cityList)
 
     override fun initXml(): Int = R.layout.activity_other_city_weather
 
@@ -53,7 +50,7 @@ class OtherCityWeatherActivity :
         }
         //初始化viewpager
         viewpager2.setPageTransformer(ZoomOutPageTransformer())
-        viewpager2.setPageTransformer(DepthPageTransformer())
+        //viewpager2.setPageTransformer(DepthPageTransformer())
         viewpager2.adapter = cityFragmentAdapter
     }
 
@@ -89,15 +86,5 @@ class OtherCityWeatherActivity :
 
     fun onAddCity() {
         cityPicker.show()
-    }
-
-    private class MyFragmentStateAdapter(
-        activity: OtherCityWeatherActivity,
-        private val cityList: ArrayList<String>
-    ) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = cityList.size
-
-        override fun createFragment(position: Int): Fragment = OtherCityFragment(cityList[position])
-
     }
 }

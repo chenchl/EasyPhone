@@ -114,16 +114,18 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
         Observer {
             //只监听一次 防止后续重复收到
             LocationManager.aMapLocationData.removeObserver(locationObserver)
-            if (it.errorCode == 0) {
-                val city = it.city.replace("市", "")
-                if (!TextUtils.equals(viewModel.cityName, city)) {
-                    viewModel.cityName = city
-                    viewModel.recordCurrentCity()
-                    viewModel.requestWeather()
-                }
-            } else {
-                runUiThread {
-                    Utils.getApp().toast(it.errorInfo)
+            with(it) {
+                if (errorCode == 0) {
+                    val city = city.replace("市", "")
+                    if (!TextUtils.equals(viewModel.cityName, city)) {
+                        viewModel.cityName = city
+                        viewModel.recordCurrentCity()
+                        viewModel.requestWeather()
+                    }
+                } else {
+                    runUiThread {
+                        Utils.getApp().toast(errorInfo)
+                    }
                 }
             }
         }
@@ -164,6 +166,33 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
         })
     }
 
+    //写法2 使用run
+    private val locationObserverF: Observer<AMapLocation> = run {
+        Observer {
+            //只监听一次 防止后续重复收到
+            LocationManager.aMapLocationData.removeObserver(locationObserverF)
+            with(it) {
+                if (errorCode == 0) {
+                    cityPicker.locateComplete(
+                        LocatedCity(
+                            city,
+                            province,
+                            cityCode
+                        ), LocateState.SUCCESS
+                    )
+                } else {
+                    cityPicker.locateComplete(
+                        LocatedCity(
+                            "北京",
+                            "北京",
+                            "101010100"
+                        ), LocateState.FAILURE
+                    )
+                }
+            }
+        }
+    }
+
     val cityPicker: CityPicker by lazy(LazyThreadSafetyMode.NONE) {
         CityPicker.from(this) //activity或者fragment
             .enableAnimation(true)    //启用动画效果，默认无
@@ -179,23 +208,12 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
                 }
 
                 override fun onLocate() {
-                    LocationManager.getCurrentLocationCity({ city, province, cityCode ->
-                        cityPicker.locateComplete(
-                            LocatedCity(
-                                city,
-                                province,
-                                cityCode
-                            ), LocateState.SUCCESS
-                        )
-                    }, {
-                        cityPicker.locateComplete(
-                            LocatedCity(
-                                "北京",
-                                "北京",
-                                "101010100"
-                            ), LocateState.FAILURE
-                        )
-                    })
+                    LocationManager.getCurrentLocationCity()
+                    LocationManager.aMapLocationData.removeObserver(locationObserverF)
+                    LocationManager.aMapLocationData.observe(
+                        this@WeatherActivity,
+                        locationObserverF
+                    )
                 }
             })
     }

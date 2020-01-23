@@ -71,6 +71,7 @@ class WeatherViewModel : BaseViewModel() {
             .subscribe { bgUrl.value = bgUrl.value }
     }
 
+    //是否需要刷新故事
     fun onRefresh(isNeedJoke: Boolean = true) {
         requestWeather()
         if (isNeedJoke)
