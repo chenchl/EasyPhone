@@ -1,7 +1,6 @@
 package cn.chenchl.mvvm
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 
@@ -12,12 +11,12 @@ import androidx.lifecycle.Observer
 class UnStickyLiveData<T> : MutableLiveData<T>() {
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
+        //防止第一次注册监听时数据倒灌
+        value = null
         super.observe(owner, observer)
-        //hook防止第一次注册监听时数据倒灌
-        hook(observer)
     }
 
-    private fun hook(observer: Observer<in T>) {
+    /*private fun hook(observer: Observer<in T>) {
         val liveDataClass = LiveData::class.java
         try { //获取field private SafeIterableMap<Observer<T>, ObserverWrapper> mObservers
             val mObservers = liveDataClass.getDeclaredField("mObservers")
@@ -57,6 +56,16 @@ class UnStickyLiveData<T> : MutableLiveData<T>() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
+    }*/
+}
 
+/**
+ * 拦截回调 防止数据倒灌
+ */
+class UnStickyObserver<T>(private val onChange: (T) -> Unit) : Observer<T> {
+    override fun onChanged(t: T) {
+        if (t != null) {
+            onChange(t)
+        }
+    }
 }

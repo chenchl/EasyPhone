@@ -1,8 +1,8 @@
 package cn.chenchl.easyphone.utils.location
 
-import androidx.lifecycle.MutableLiveData
 import cn.chenchl.libs.Utils
 import cn.chenchl.libs.log.LogUtil
+import cn.chenchl.mvvm.UnStickyLiveData
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -26,7 +26,7 @@ object LocationManager {
 
     private var listener: AMapLocationListener? = null
 
-    val aMapLocationData: MutableLiveData<AMapLocation> = MutableLiveData()
+    val aMapLocationData: UnStickyLiveData<AMapLocation> = UnStickyLiveData()
 
     fun getCurrentLocationCity(
         response: (city: String, province: String, cityCode: String) -> Unit = { _, _, _ -> },

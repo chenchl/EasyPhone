@@ -19,6 +19,7 @@ import cn.chenchl.libs.extensions.checkPermissions
 import cn.chenchl.libs.extensions.getStatusBarHeight
 import cn.chenchl.libs.extensions.runUiThread
 import cn.chenchl.mvvm.BaseMVVMActivity
+import cn.chenchl.mvvm.UnStickyObserver
 import com.amap.api.location.AMapLocation
 import com.zaaach.citypicker.CityPicker
 import com.zaaach.citypicker.adapter.OnPickListener
@@ -110,8 +111,8 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
    }*/
 
     //写法2 使用run
-    private val locationObserver: Observer<AMapLocation> = run {
-        Observer {
+    private val locationObserver: UnStickyObserver<AMapLocation> = run {
+        UnStickyObserver {
             //只监听一次 防止后续重复收到
             LocationManager.aMapLocationData.removeObserver(locationObserver)
             with(it) {
@@ -167,9 +168,8 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
     }
 
     //写法2 使用run
-    private val locationObserverF: Observer<AMapLocation> = run {
-        Observer {
-            //只监听一次 防止后续重复收到
+    private val locationObserverF: UnStickyObserver<AMapLocation> = run {
+        UnStickyObserver {
             LocationManager.aMapLocationData.removeObserver(locationObserverF)
             with(it) {
                 if (errorCode == 0) {
@@ -193,7 +193,7 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
         }
     }
 
-    val cityPicker: CityPicker by lazy(LazyThreadSafetyMode.NONE) {
+    private val cityPicker: CityPicker by lazy(LazyThreadSafetyMode.NONE) {
         CityPicker.from(this) //activity或者fragment
             .enableAnimation(true)    //启用动画效果，默认无
             .setOnPickListener(object : OnPickListener {
@@ -208,12 +208,12 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
                 }
 
                 override fun onLocate() {
-                    LocationManager.getCurrentLocationCity()
                     LocationManager.aMapLocationData.removeObserver(locationObserverF)
                     LocationManager.aMapLocationData.observe(
                         this@WeatherActivity,
                         locationObserverF
                     )
+                    LocationManager.getCurrentLocationCity()
                 }
             })
     }
