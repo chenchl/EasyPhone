@@ -34,11 +34,11 @@ object LocalCache : ICache {
         cache?.set(key = key, value = value)
     }
 
-    override operator fun <T> get(fileName: String, key: String, defValue: T): T? =
-        cache?.get(fileName, key, defValue)
+    override operator fun <T> get(fileName: String, key: String, defValue: T): T =
+        cache!!.get(fileName, key, defValue)
 
-    operator fun <T> get(key: String, defValue: T): T? =
-        cache?.get(key = key, defValue = defValue)
+    operator fun <T> get(key: String, defValue: T): T =
+        cache!!.get(key = key, defValue = defValue)
 
     override fun remove(fileName: String, key: String) = cache?.remove(fileName, key)
 

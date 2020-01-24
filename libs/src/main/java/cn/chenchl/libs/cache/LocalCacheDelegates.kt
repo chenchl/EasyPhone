@@ -17,12 +17,12 @@ object LocalCacheDelegates {
 
     class LocalCacheProperty<T>(
         private val key: String,
-        private val defvalue: T,
+        private val defValue: T,
         private val fileName: String
     ) :
         ReadWriteProperty<Any?, T?> {
-        override fun getValue(thisRef: Any?, property: KProperty<*>): T? =
-            LocalCache.get(fileName, key, defvalue)
+        override fun getValue(thisRef: Any?, property: KProperty<*>): T =
+            LocalCache.get(fileName, key, defValue)
 
 
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) =

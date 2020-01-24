@@ -36,7 +36,7 @@ class MMKVCache private constructor() : ICache {
     override operator fun <T> set(fileName: String, key: String, value: T) =
         _put(fileName, key, value)
 
-    override operator fun <T> get(fileName: String, key: String, defValue: T): T? =
+    override operator fun <T> get(fileName: String, key: String, defValue: T): T =
         _get(fileName, key, defValue)
 
     override fun remove(fileName: String, key: String) = _remove(fileName, key)
@@ -55,6 +55,7 @@ class MMKVCache private constructor() : ICache {
         LogUtil.i(TAG!!, "mmkv init root: $rootDir")
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun <T> _put(fileName: String, key: String, value: T) {
         val mmkv = MMKV.mmkvWithID(fileName, MMKV.SINGLE_PROCESS_MODE, config.cryptKey)
         var result = false
@@ -80,6 +81,9 @@ class MMKVCache private constructor() : ICache {
             is ByteArray -> {
                 result = mmkv.encode(key, value as ByteArray)
             }
+            is Set<*> -> {
+                result = mmkv.encode(key, value as Set<String>)
+            }
             is Parcelable -> {
                 result = mmkv.encode(key, value as Parcelable)
             }
@@ -88,7 +92,7 @@ class MMKVCache private constructor() : ICache {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T> _get(fileName: String, key: String, defValue: T): T? {
+    private fun <T> _get(fileName: String, key: String, defValue: T): T {
         val mmkv = MMKV.mmkvWithID(fileName, MMKV.SINGLE_PROCESS_MODE, config.cryptKey)
         var result: T? = null
         when (defValue) {
@@ -113,13 +117,16 @@ class MMKVCache private constructor() : ICache {
             is ByteArray -> {
                 result = mmkv.decodeBytes(key, defValue) as T
             }
+            is Set<*> -> {
+                result = mmkv.decodeStringSet(key, defValue as Set<String>) as T
+            }
             is Parcelable -> {
                 val objects: Parcelable = defValue
                 result = mmkv.decodeParcelable(key, objects.javaClass, objects) as T
             }
         }
         LogUtil.i(TAG!!, "mmkv $fileName _get :$key value = $result")
-        return result
+        return result!!
     }
 
     private fun _remove(fileName: String, key: String) {

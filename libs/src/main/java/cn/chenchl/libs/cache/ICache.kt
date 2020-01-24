@@ -22,7 +22,7 @@ interface ICache {
     /**
      * 获取数据 (带默认值 必定不为空)
      */
-    fun <T> get(fileName: String = config.filename, key: String, defValue: T): T?
+    fun <T> get(fileName: String = config.filename, key: String, defValue: T): T
 
     /**
      * 删除key
