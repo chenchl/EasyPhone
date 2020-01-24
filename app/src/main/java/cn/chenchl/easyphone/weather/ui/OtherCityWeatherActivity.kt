@@ -3,6 +3,7 @@ package cn.chenchl.easyphone.weather.ui
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.postDelayed
 import cn.chenchl.easyphone.BR
 import cn.chenchl.easyphone.R
 import cn.chenchl.easyphone.databinding.ActivityOtherCityWeatherBinding
@@ -23,7 +24,7 @@ class OtherCityWeatherActivity :
 
     val cityList: ArrayList<String> = ArrayList()
 
-    private val cityFragmentAdapter = WeatherFragmentAdapter(this, cityList)
+    val cityFragmentAdapter = WeatherFragmentAdapter(this, cityList)
 
     override fun initXml(): Int = R.layout.activity_other_city_weather
 
@@ -86,5 +87,25 @@ class OtherCityWeatherActivity :
 
     fun onAddCity() {
         cityPicker.show()
+    }
+
+    fun onCancelCity(name: String) {
+        when (cityList.indexOf(name)) {
+            0 -> {
+                if (cityList.size != 1) {
+                    viewpager2.currentItem = 1
+                }
+            }
+            cityList.size - 1 -> {
+                viewpager2.currentItem = cityList.size - 2
+            }
+            else -> {
+                viewpager2.currentItem = viewpager2.currentItem + 1
+            }
+        }
+        viewpager2.postDelayed(600) {
+            cityFragmentAdapter.notifyItemRemoved(cityList.indexOf(name))
+            cityList.remove(name)
+        }
     }
 }

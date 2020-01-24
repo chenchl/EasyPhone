@@ -30,4 +30,11 @@ class OtherCityFragment(private val cityName: String) :
             viewModel.refreshing.value = false
         })
     }
+
+    fun onCancel() {
+        activity?.let {
+            val otherCityWeatherActivity = activity as OtherCityWeatherActivity
+            otherCityWeatherActivity.onCancelCity(cityName)
+        }
+    }
 }

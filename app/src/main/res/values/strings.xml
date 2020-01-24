@@ -7,4 +7,5 @@
     <string name="change_city">切换城市</string>
     <string name="other_city">其他城市</string>
     <string name="add_city">添加城市</string>
+    <string name="cancel_city">取消关注</string>
 </resources>

@@ -56,6 +56,30 @@
                     layout="@layout/item_future_weather"
                     bind:future="@{vm.weatherData}" />
 
+                <LinearLayout
+                    NoFastOnClick="@{()->view.onCancel()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/x20"
+                    android:background="@color/light_gray"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/x20">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_cancel"
+                        android:drawablePadding="@dimen/x10"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="@string/cancel_city"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x40"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
