@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import cn.chenchl.libs.BaseApp
 import cn.chenchl.libs.Utils
+import cn.chenchl.mvvm.annotation.MvvMAutoWired
 import java.lang.reflect.ParameterizedType
 
 
@@ -26,6 +27,18 @@ abstract class BaseMVVMFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragm
     //全局共享viewModel 可用于消息传递 变量共享
     val globalShareViewModel: GlobalShareViewModel by lazy {
         (Utils.getApp() as BaseApp).getViewModelProvider().get(GlobalShareViewModel::class.java)
+    }
+
+    //默认使用注解获取 可重写不用注解
+    override fun initXml(): Int {
+        val clazz = javaClass
+        if (clazz.isAnnotationPresent(MvvMAutoWired::class.java)) {
+            val mvvMAutoWired = clazz.getAnnotation(MvvMAutoWired::class.java)
+            return mvvMAutoWired!!.value
+        } else {
+            throw IllegalArgumentException("this fragment file must to set " +
+                    "MvvMAutoWired before declaration or override initXml()")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

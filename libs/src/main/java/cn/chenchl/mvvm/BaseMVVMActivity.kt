@@ -34,13 +34,15 @@ abstract class BaseMVVMActivity<V : ViewDataBinding, VM : BaseViewModel> :
         initViewObservable()
     }
 
+    //默认使用注解获取 可重写不用注解
     override fun initXml(): Int {
         val clazz = javaClass
         if (clazz.isAnnotationPresent(MvvMAutoWired::class.java)) {
             val mvvMAutoWired = clazz.getAnnotation(MvvMAutoWired::class.java)
             return mvvMAutoWired!!.value
         } else {
-            throw IllegalArgumentException("this Activity file must to set MvvMAutoWired before declaration")
+            throw IllegalArgumentException("this Activity file must to set " +
+                    "MvvMAutoWired before declaration or override initXml()")
         }
     }
 
