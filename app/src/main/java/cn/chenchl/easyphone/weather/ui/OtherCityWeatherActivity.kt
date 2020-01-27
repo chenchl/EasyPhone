@@ -10,6 +10,7 @@ import cn.chenchl.easyphone.databinding.ActivityOtherCityWeatherBinding
 import cn.chenchl.libs.extensions.getStatusBarHeight
 import cn.chenchl.libs.widget.ZoomOutPageTransformer
 import cn.chenchl.mvvm.BaseMVVMActivity
+import cn.chenchl.mvvm.annotation.MvvMAutoWired
 import com.zaaach.citypicker.CityPicker
 import com.zaaach.citypicker.adapter.OnPickListener
 import com.zaaach.citypicker.model.City
@@ -18,15 +19,13 @@ import kotlinx.android.synthetic.main.activity_other_city_weather.*
 import kotlinx.android.synthetic.main.activity_weather.ll_title
 import org.jetbrains.anko.doFromSdk
 import org.jetbrains.anko.toast
-
+@MvvMAutoWired(R.layout.activity_other_city_weather)
 class OtherCityWeatherActivity :
     BaseMVVMActivity<ActivityOtherCityWeatherBinding, WeatherViewModel>() {
 
     val cityList: ArrayList<String> = ArrayList()
 
     val cityFragmentAdapter = WeatherFragmentAdapter(this, cityList)
-
-    override fun initXml(): Int = R.layout.activity_other_city_weather
 
     override fun getDBVariableId(): Int = BR.vm
 

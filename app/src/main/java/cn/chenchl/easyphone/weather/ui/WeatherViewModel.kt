@@ -38,7 +38,7 @@ class WeatherViewModel : BaseViewModel() {
 
     val titleColor: MutableLiveData<Int> = MutableLiveData(Color.WHITE)
 
-    var cityName: String = LocalCache["currentCity", "绵阳"]!!
+    var cityName: String = LocalCache["currentCity", "绵阳"]
 
     fun requestWeather(city: String = cityName, isRefresh: Boolean = true) {
         refreshing.value = true

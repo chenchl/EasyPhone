@@ -39,6 +39,7 @@ class MemoryCache private constructor() {
         return cache[key]
     }
 
+    @Suppress("UNCHECKED_CAST")
     @Synchronized
     operator fun <T> get(key: String?, clazz: Class<T>?): T? {
         try {

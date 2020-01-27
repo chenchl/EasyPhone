@@ -7,6 +7,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProviders
 import cn.chenchl.libs.BaseApp
 import cn.chenchl.libs.Utils
+import cn.chenchl.mvvm.annotation.MvvMAutoWired
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -31,6 +32,16 @@ abstract class BaseMVVMActivity<V : ViewDataBinding, VM : BaseViewModel> :
         initView(savedInstanceState)
         initData(savedInstanceState)
         initViewObservable()
+    }
+
+    override fun initXml(): Int {
+        val clazz = javaClass
+        if (clazz.isAnnotationPresent(MvvMAutoWired::class.java)) {
+            val mvvMAutoWired = clazz.getAnnotation(MvvMAutoWired::class.java)
+            return mvvMAutoWired!!.value
+        } else {
+            throw IllegalArgumentException("this Activity file must to set MvvMAutoWired before declaration")
+        }
     }
 
     override fun initBefore(savedInstanceState: Bundle?) {
