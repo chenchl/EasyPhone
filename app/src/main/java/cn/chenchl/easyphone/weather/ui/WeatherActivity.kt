@@ -20,6 +20,7 @@ import cn.chenchl.libs.extensions.getStatusBarHeight
 import cn.chenchl.libs.extensions.runUiThread
 import cn.chenchl.mvvm.BaseMVVMActivity
 import cn.chenchl.mvvm.UnStickyObserver
+import cn.chenchl.statelayoutlibrary.StateLayout
 import com.amap.api.location.AMapLocation
 import com.zaaach.citypicker.CityPicker
 import com.zaaach.citypicker.adapter.OnPickListener
@@ -36,6 +37,8 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
     private val jokeListAdapter: JokeListAdapter = JokeListAdapter()
 
     private var titleScrollHeight = 0
+
+    private lateinit var stateLayout: StateLayout
 
     override fun initXml(): Int = R.layout.activity_weather
 
@@ -57,7 +60,15 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
         layoutParams.topMargin = getStatusBarHeight()
         statusbar_top.layoutParams.height = getStatusBarHeight()
         initTitleBar()
-
+        stateLayout = StateLayout(this)
+            .setOnRetryClickListener {
+                viewModel.refreshing.value = true
+                viewModel.onRefresh()
+            }
+            .setAnimDuration(500)
+            .setEnableLoadingAlpha(false)
+            .with(this)
+            .showLoading("数据加载中")
     }
 
     private fun initTitleBar() {
@@ -163,6 +174,14 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
             jokeListAdapter.addDataList(it)
         })
         viewModel.weatherData.observe(this, Observer {
+            if (it == null) {
+                stateLayout.showError("数据加载异常请点击重试")
+            } else {
+                //模拟效果
+                stateLayout.postDelayed({
+                    stateLayout.showContent()
+                },3000)
+            }
             viewModel.refreshing.value = false
         })
     }

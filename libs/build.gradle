@@ -63,6 +63,7 @@ dependencies {
     api 'com.squareup.retrofit2:retrofit:2.7.1'
     api 'com.squareup.retrofit2:adapter-rxjava2:2.7.1'
     api 'com.squareup.retrofit2:converter-gson:2.7.1'
+    api 'com.github.chenchl:StateLayout:1.0.0'
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'com.tencent:mmkv:1.0.23'
     api 'androidx.recyclerview:recyclerview:1.1.0'
