@@ -25,6 +25,9 @@ object WeatherNetwork : BaseNet() {
     fun getWeather(city: String) = WeatherNetService
         .getWeather(city)
 
+    suspend fun getWeather1(city: String) = WeatherNetService
+        .getWeather1(city)
+
     fun getJokeList() = WeatherNetService
         .getJokeList()
 

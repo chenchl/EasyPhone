@@ -10,6 +10,7 @@ import cn.chenchl.easyphone.weather.data.bean.JokeInfo
 import cn.chenchl.easyphone.weather.data.dao.WeatherDao
 import cn.chenchl.easyphone.weather.data.net.WeatherNetwork
 import cn.chenchl.libs.cache.LocalCache
+import cn.chenchl.libs.network.retrofit.requestOnlySuccess
 import cn.chenchl.libs.rxjava.RxLifecycleUtil
 import cn.chenchl.mvvm.BaseViewModel
 import cn.chenchl.mvvm.RepoMediatorLiveData
@@ -41,8 +42,17 @@ class WeatherViewModel : BaseViewModel() {
     var cityName: String = LocalCache["currentCity", "绵阳"]
 
     fun requestWeather(city: String = cityName, isRefresh: Boolean = true) {
-        refreshing.value = true
-        repository.getWeather(city, isRefresh)
+        //refreshing.value = true
+        //repository.getWeather(city, isRefresh)
+        requestOnlySuccess(
+            {
+                refreshing.value = true
+                repository.getWeatherByCoroutine(city, isRefresh)
+            },
+            { weatherData.value = it },
+            { weatherData.value = null },
+            { refreshing.value = false }
+        )
     }
 
     fun requestJokeList(isRefresh: Boolean = true) {

@@ -182,7 +182,7 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
                     stateLayout.showContent()
                 },3000)
             }
-            viewModel.refreshing.value = false
+            //viewModel.refreshing.value = false
         })
     }
 

@@ -1,10 +1,16 @@
 package cn.chenchl.libs.network.retrofit;
 
+import com.google.gson.JsonParseException;
+
+import org.json.JSONException;
+
+import java.net.UnknownHostException;
+
 /**
  * Created by ccl on 2016/12/24.
  */
 
-public class NetError extends Exception {
+public class NetError extends Throwable {
     private Throwable exception;
     private int type = ServerError;
 
@@ -34,5 +40,30 @@ public class NetError extends Exception {
 
     public int getType() {
         return type;
+    }
+
+    public static NetError handleException(Throwable e) {
+        NetError error = null;
+        if (e != null) {
+            if (e instanceof UnknownHostException) {
+                error = new NetError(e, NetError.NoConnectError);
+            } else if (e instanceof JSONException || e instanceof JsonParseException) {
+                error = new NetError(e, NetError.ParseError);
+            } else if (e instanceof NetError) {
+                error = (NetError) e;
+            } else {
+                error = new NetError(e, NetError.OtherError);
+            }
+            /*if (useCommonErrorHandler()
+                    && RetrofitUtil.getCommonProvider() != null) {
+                if (RetrofitUtil.getCommonProvider().handleError(error)) {        //使用通用异常处理
+                    return;
+                }
+            }
+            onFail(error);*/
+        } else {
+            error = new NetError(new RuntimeException("unknown Exception"), NetError.OtherError);
+        }
+        return error;
     }
 }

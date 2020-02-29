@@ -15,6 +15,9 @@ interface WeatherNetService {
     @GET("query")
     fun getWeather(@Query("city") city: String, @Query("key") appKey: String = WeatherNetwork.WEATHER_KEY): Flowable<CityWeatherModel>
 
+    @GET("query")
+    suspend fun getWeather1(@Query("city") city: String, @Query("key") appKey: String = WeatherNetwork.WEATHER_KEY): CityWeatherModel
+
     @GET
     fun getJokeList(@Url url: String = "http://v.juhe.cn/joke/randJoke.php?key=" + WeatherNetwork.JOKE_KEY): Flowable<JokeListModel>
 }

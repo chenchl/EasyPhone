@@ -71,6 +71,19 @@ class WeatherRepository(
         }
     }
 
+    suspend fun getWeatherByCoroutine(city: String, isRefresh: Boolean): CityWeatherModel {
+        val weatherJson = dao.queryTodayWeather(city)
+        return if (TextUtils.isEmpty(weatherJson) || isRefresh) {
+            val responseData = network.getWeather1(city)
+            //weatherDataConversion(responseData)
+            dao.insertTodayWeather(city, GSonUtil.toJson(responseData))
+            responseData
+        } else {
+            GSonUtil.fromJson(weatherJson, CityWeatherModel::class.java)
+        }
+    }
+
+
     @SuppressLint("CheckResult")
     fun getJokeList(isRefresh: Boolean) {
         dao.queryJokeList {
