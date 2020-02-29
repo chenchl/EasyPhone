@@ -21,9 +21,9 @@ import org.jetbrains.anko.toast
  * created by ccl on 2020/1/12
  **/
 class WeatherRepository(
-    dao: WeatherDao,
-    net: WeatherNetwork
-) : BaseRepository<WeatherDao, WeatherNetwork>(dao, net) {
+    private val dao: WeatherDao,
+    private val network: WeatherNetwork
+) : BaseRepository() {
 
     val jokeList: MutableLiveData<List<JokeInfo>> = MutableLiveData()
 

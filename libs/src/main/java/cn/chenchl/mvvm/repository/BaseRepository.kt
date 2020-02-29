@@ -2,15 +2,11 @@ package cn.chenchl.mvvm.repository
 
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 
 /**
  * created by ccl on 2020/1/12
  **/
-abstract class BaseRepository<Dao : BaseDao, Net : BaseNet>(
-    protected val dao: Dao,
-    protected val network: Net
-) : IRepository, Consumer<Disposable> {
+abstract class BaseRepository : IRepository {
 
     private val compositeDisposable by lazy { CompositeDisposable() }
 
@@ -23,10 +19,6 @@ abstract class BaseRepository<Dao : BaseDao, Net : BaseNet>(
     fun disposeAll() {
         //clear()调用只会清除当前在compositeDisposable set集合中的disposable对象 不会影响后续新加入的disposable对象
         compositeDisposable.clear()
-    }
-
-    override fun accept(disposable: Disposable?) {
-        disposable?.let { compositeDisposable.add(disposable) }
     }
 
     fun addSubscriber(disposable: Disposable) = compositeDisposable.add(disposable)

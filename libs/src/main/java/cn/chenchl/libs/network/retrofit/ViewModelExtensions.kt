@@ -13,13 +13,13 @@ import kotlinx.coroutines.launch
 //协程请求1:不处理异常code全部抛给上层自行处理
 inline fun BaseViewModel.request(
     crossinline complete: suspend CoroutineScope.() -> Unit = {},//请求结束
-    crossinline error: suspend CoroutineScope.(Throwable) -> Unit = {},//异常处理
+    crossinline error: suspend CoroutineScope.(NetError) -> Unit = {},//异常处理
     crossinline block: suspend CoroutineScope.() -> Unit//请求体
 ) = viewModelScope.launch {
     try {
         block()
     } catch (e: Throwable) {
-        error(e)
+        error(NetError.handleException(e))
     } finally {
         complete()
     }
@@ -35,19 +35,9 @@ inline fun <T> BaseViewModel.requestOnlySuccess(
     viewModelScope.launch {
         handleException(
             { block() },
-            { response ->
-                handleResponse(response) {
-                    success(
-                        it
-                    )
-                }
-            },
-            {
-                error(it)
-            },
-            {
-                complete()
-            }
+            { response -> handleResponse(response) { success(it) } },
+            { error(it) },
+            { complete() }
         )
     }
 }
