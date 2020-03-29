@@ -74,4 +74,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     kapt  "com.android.databinding:compiler:3.5.3"
+    api 'com.didichuxing.doraemonkit:doraemonkit:3.0.0'
 }

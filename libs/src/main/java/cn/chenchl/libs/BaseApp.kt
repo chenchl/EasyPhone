@@ -15,6 +15,7 @@ import cn.chenchl.libs.network.cookie.MemoryCookieStore
 import cn.chenchl.libs.network.retrofit.NetError
 import cn.chenchl.libs.network.retrofit.NetProvider
 import cn.chenchl.libs.network.retrofit.RetrofitUtil
+import com.didichuxing.doraemonkit.DoraemonKit
 import com.squareup.picasso.Picasso
 import okhttp3.CookieJar
 import okhttp3.Interceptor
@@ -79,6 +80,7 @@ class BaseApp : MultiDexApplication(), ViewModelStoreOwner {
                 .indicatorsEnabled(true)
                 .build()
         Picasso.setSingletonInstance(picasso)
+        DoraemonKit.install(this,null,"pId");
     }
 
     /**

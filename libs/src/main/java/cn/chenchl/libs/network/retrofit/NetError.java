@@ -45,7 +45,9 @@ public class NetError extends Throwable {
     public static NetError handleException(Throwable e) {
         NetError error = null;
         if (e != null) {
-            if (e instanceof UnknownHostException) {
+            if (e instanceof NetError) {
+                error = (NetError) e;
+            } else if (e instanceof UnknownHostException) {
                 error = new NetError(e, NetError.NoConnectError);
             } else if (e instanceof JSONException || e instanceof JsonParseException) {
                 error = new NetError(e, NetError.ParseError);

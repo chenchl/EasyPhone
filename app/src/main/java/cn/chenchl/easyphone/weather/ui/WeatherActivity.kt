@@ -130,7 +130,7 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
                 if (errorCode == 0) {
                     val city = city.replace("市", "")
                     if (!TextUtils.equals(viewModel.cityName, city)) {
-                        viewModel.cityName = city
+                        viewModel.cityName = "绵阳"
                         viewModel.recordCurrentCity()
                         viewModel.requestWeather()
                     }
@@ -242,6 +242,20 @@ class WeatherActivity : BaseMVVMActivity<ActivityWeatherBinding, WeatherViewMode
     }
 
     fun toOtherCity(view: View) {
+        /*BaseDialog()
+            .create(this)
+            .setIsCancelable(false)
+            .setIsCanceledOnTouchOutside(false)
+            .setTitle("更多")
+            .setContent("收藏")
+            .setAccpet("移动"
+            ) { _, d ->
+                d.dismiss()
+            }
+            .setCancel("取消"){ _: Any, dialogInterface: DialogInterface ->
+                dialogInterface.dismiss()
+            }
+            .show();*/
         startActivity<OtherCityWeatherActivity>()
     }
 
