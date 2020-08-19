@@ -11,7 +11,7 @@ import cn.chenchl.libs.log.LogUtil
 /**
  * created by ccl on 2020/1/20
  **/
-@Database(entities = [JokeInfo::class], version = 1)
+@Database(entities = [JokeInfo::class], version = 1, exportSchema = false)
 abstract class JokeDatabase : RoomDatabase() {
 
     abstract fun jokeDao(): JokeDataBaseDao
