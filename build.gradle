@@ -9,13 +9,13 @@ buildscript {
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
         maven {
-            url "http://maven.aliyun.com/nexus/content/repositories/releases"
+            url "https://maven.aliyun.com/repository/central"
         }
-        jcenter()
         maven { url 'https://jitpack.io' }
-        maven { url 'http://localhost:8088/repository/chenchl/' }
+        //maven { url 'http://localhost:8088/repository/chenchl/' }
+        /*jcenter()
         google()
-        mavenCentral()
+        mavenCentral()*/
 
     }
     dependencies {
@@ -32,13 +32,13 @@ allprojects {
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
-        maven { url "http://maven.aliyun.com/nexus/content/repositories/releases/" }
-        maven { url "https://maven.google.com" }
-        jcenter()
+        maven { url "https://maven.aliyun.com/repository/central" }
+        maven { url "https://maven.aliyun.com/repository/google" }
         maven { url 'https://jitpack.io' }
-        maven { url 'http://localhost:8088/repository/chenchl/' }
+        //maven { url 'http://localhost:8088/repository/chenchl/' }
         maven { url 'https://oss.jfrog.org/libs-snapshot' }
-        google()
+        /*jcenter()
+        google()*/
 
     }
 }
